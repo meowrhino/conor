@@ -53,7 +53,7 @@ function populateMenu() {
     const projectsContainer = document.getElementById('projects-buttons');
     appData.projects.forEach(project => {
         const img = document.createElement('img');
-        img.src = `data/projects/${project.slug}/${project.slug}.webp`;
+        img.src = `data/projects/${project.slug}/title.webp`;
         img.alt = project.title;
         img.addEventListener('click', () => handleProjectClick(project));
         projectsContainer.appendChild(img);
@@ -73,9 +73,10 @@ function populateMenu() {
     const albumsContainer = document.getElementById('family-archive-albums');
     const archive = appData.familyArchive[0];
     archive.albums.forEach(album => {
-        const link = document.createElement('div');
+        const link = document.createElement('img');
         link.className = 'album-link';
-        link.textContent = album.title;
+        link.src = `data/familyArchive/${archive.slug}/${album.slug}/title.webp`;
+        link.alt = album.title;
         link.addEventListener('click', () => goToProject('album', `${archive.slug}/${album.slug}`));
         albumsContainer.appendChild(link);
     });

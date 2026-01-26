@@ -404,3 +404,151 @@ Se creó el documento `manus/assets-no-usados.md` con un análisis detallado de 
 3. Considerar añadir secciones de education, exhibitions, publications
 4. Optimizar carga de imágenes para proyectos muy grandes (lazy loading más inteligente)
 5. Añadir transiciones suaves entre páginas si se desea
+
+
+---
+
+## 26 de enero de 2026, 09:30 GMT+1
+
+### Tercera iteración: Grid masonry, títulos corregidos, y mejoras de UX
+
+#### Sinopsis
+
+Implementación de grid masonry compacta tipo Pinterest, corrección de rutas de títulos, generación de imágenes de texto manuscrito para family archive, ajuste de hover opacity en galería, y reposicionamiento de botones después de la grid en lugar de fixed.
+
+#### Problemas identificados y soluciones
+
+El usuario reportó varios problemas con la implementación anterior que requerían atención inmediata. Los títulos en el home estaban usando las imágenes de los proyectos en lugar de las imágenes de títulos dedicadas. Las imágenes del proyecto "allEars" no se cargaban correctamente. La grid tenía espacios innecesarios entre imágenes y no aprovechaba el espacio disponible. El hover en las imágenes de la galería no mostraba cambio visual. El family archive usaba texto plano en lugar de imágenes de texto manuscrito. Los botones de home e info estaban fixed cuando deberían estar después de la grid.
+
+#### Generación de imágenes de texto manuscrito
+
+Se generaron 12 imágenes de texto manuscrito para los álbumes del family archive usando AI. Cada imagen simula texto escrito a mano en papel envejecido, creando un efecto de "escaneo" de álbum de fotos antiguo. Las imágenes se guardaron como `title.webp` en cada carpeta de álbum correspondiente.
+
+**Álbumes generados:**
+- 1987 Rhodes
+- 1989, 1990
+- 1993-4, 1993 Wedding, 1994
+- 1999 Connor
+- 2001, 2002-2003
+- 2003-2004 Turkey
+- House, Misc
+
+El estilo visual es consistente: tinta azul oscura sobre papel envejecido con textura sutil, escritura natural e imperfecta con carácter personal.
+
+#### Reorganización de títulos de proyectos
+
+Se copiaron las imágenes de títulos desde `data/assets/titles/` a las carpetas de cada proyecto como `title.webp`. Esto permite mantener una estructura consistente donde cada proyecto tiene su propio título visual.
+
+**Cambios en rutas:**
+- `data/projects/allEars/title.webp` (copiado desde assets/titles/allEars.webp)
+- `data/projects/belladona/title.webp` (copiado desde assets/titles/belladona.webp)
+- `data/projects/buttercup/title.webp` (copiado desde assets/titles/buttercup.webp)
+
+Se actualizó `home.js` para cargar `title.webp` en lugar de `{slug}.webp` para los botones de proyectos. También se actualizó para usar las imágenes de título generadas en family archive en lugar de texto plano.
+
+#### Implementación de grid masonry
+
+La grid anterior usaba CSS Grid con nth-child para crear un efecto "dentado", pero dejaba espacios vacíos y no era lo suficientemente compacta. Se implementó un layout masonry puro con JavaScript que distribuye las imágenes en columnas de forma óptima.
+
+**Funcionamiento del masonry:**
+
+El sistema crea 3 columnas dinámicas y distribuye las imágenes añadiendo cada una a la columna más corta en ese momento. Esto asegura que las imágenes se apilen de forma compacta sin espacios vacíos, similar a Pinterest o Tumblr.
+
+```javascript
+// Crear columnas
+const columnCount = 3;
+const columns = [];
+for (let i = 0; i < columnCount; i++) {
+    const column = document.createElement('div');
+    column.className = 'masonry-column';
+    columns.push(column);
+    grid.appendChild(column);
+}
+
+// Distribuir imágenes
+images.forEach((src, index) => {
+    // ... crear imagen ...
+    
+    // Añadir a la columna más corta
+    const shortestColumn = columns.reduce((shortest, current) => {
+        return current.offsetHeight < shortest.offsetHeight ? current : shortest;
+    });
+    shortestColumn.appendChild(container);
+});
+```
+
+**CSS del masonry:**
+
+```css
+.gallery-grid {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+.masonry-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+```
+
+Este approach es mucho más simple que usar librerías externas y produce un resultado visualmente idéntico al ejemplo proporcionado por el usuario.
+
+#### Mejoras de hover y opacidad
+
+Las imágenes de la galería ahora tienen opacidad reducida por defecto (0.7) y aumentan a opacidad completa (1.0) al hacer hover. Esto crea un efecto visual sutil que guía la atención del usuario.
+
+```css
+.gallery-item {
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.gallery-item:hover {
+    opacity: 1;
+}
+```
+
+#### Reposicionamiento de botones
+
+Los botones de home e info se movieron de posición fixed a posición estática después de la grid. Esto significa que el usuario debe scrollear hasta el final de las imágenes para acceder a estos botones, creando una experiencia más inmersiva donde el foco está en las imágenes.
+
+**Cambios en HTML:**
+- Botón home ahora está después de la grid
+- Botón info está después del botón home
+- Ambos usan flexbox para alineación
+
+**Cambios en CSS:**
+- `.btn-home-container` ya no es fixed
+- `.gallery-menu` ya no es fixed
+- Ambos tienen margin-top para separación de la grid
+
+#### Disposición de botones home/about
+
+Se ajustó el CSS del botón `.top-left-btn` para que cuando haya múltiples botones (home + about) en la esquina superior izquierda, se dispongan correctamente. El botón home siempre aparece primero, seguido del botón about.
+
+El tamaño de estos botones se redujo ligeramente a `max-width: 180px` para que quepan mejor cuando están juntos.
+
+#### Archivos modificados
+
+**Nuevos archivos generados:**
+- `data/projects/allEars/title.webp`
+- `data/projects/belladona/title.webp`
+- `data/projects/buttercup/title.webp`
+- `data/familyArchive/ashlee/*/title.webp` (12 imágenes)
+
+**Archivos modificados:**
+- `home.js` - Rutas actualizadas para títulos y álbumes
+- `project.js` - Implementación de masonry layout
+- `project.html` - Botones reposicionados después de grid
+- `style.css` - Masonry CSS, hover opacity, botones no fixed
+
+#### Resultado final
+
+La grid ahora es completamente compacta sin espacios vacíos, aprovechando todo el espacio disponible. Las imágenes se distribuyen de forma óptima entre las tres columnas. El hover proporciona feedback visual claro. Los títulos se cargan correctamente desde sus ubicaciones dedicadas. El family archive tiene un aspecto más homogéneo y personal con las imágenes de texto manuscrito. Los botones están posicionados después del contenido, no flotando sobre él.
+
+La experiencia de navegación es más fluida y el código es más mantenible gracias a la estructura modular del masonry.

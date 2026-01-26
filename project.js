@@ -69,8 +69,8 @@ async function loadProject() {
     document.getElementById('preloader').classList.add('hidden');
     document.getElementById('gallery').classList.remove('hidden');
     
-    // Render gallery
-    renderGallery();
+    // Render gallery with masonry
+    renderMasonryGallery();
     
     // Setup info panel
     setupInfoPanel();
@@ -108,13 +108,13 @@ async function preloadImages() {
                 loaded++;
                 const progress = (loaded / images.length) * 100;
                 loaderBar.style.width = progress + '%';
-                resolve();
+                resolve(img);
             };
             img.onerror = () => {
                 loaded++;
                 const progress = (loaded / images.length) * 100;
                 loaderBar.style.width = progress + '%';
-                resolve();
+                resolve(null);
             };
             img.src = src;
         });
@@ -123,11 +123,22 @@ async function preloadImages() {
     await Promise.all(promises);
 }
 
-// Render gallery with imperfect grid
-function renderGallery() {
+// Render gallery with masonry layout
+function renderMasonryGallery() {
     const grid = document.getElementById('gallery-grid');
     grid.innerHTML = '';
     
+    // Create columns for masonry
+    const columnCount = 3;
+    const columns = [];
+    for (let i = 0; i < columnCount; i++) {
+        const column = document.createElement('div');
+        column.className = 'masonry-column';
+        columns.push(column);
+        grid.appendChild(column);
+    }
+    
+    // Distribute images across columns
     images.forEach((src, index) => {
         const container = document.createElement('div');
         container.className = 'gallery-item';
@@ -139,7 +150,12 @@ function renderGallery() {
         img.addEventListener('click', () => openLightbox(index));
         
         container.appendChild(img);
-        grid.appendChild(container);
+        
+        // Add to shortest column
+        const shortestColumn = columns.reduce((shortest, current) => {
+            return current.offsetHeight < shortest.offsetHeight ? current : shortest;
+        });
+        shortestColumn.appendChild(container);
     });
 }
 
