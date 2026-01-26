@@ -552,3 +552,87 @@ El tamaño de estos botones se redujo ligeramente a `max-width: 180px` para que 
 La grid ahora es completamente compacta sin espacios vacíos, aprovechando todo el espacio disponible. Las imágenes se distribuyen de forma óptima entre las tres columnas. El hover proporciona feedback visual claro. Los títulos se cargan correctamente desde sus ubicaciones dedicadas. El family archive tiene un aspecto más homogéneo y personal con las imágenes de texto manuscrito. Los botones están posicionados después del contenido, no flotando sobre él.
 
 La experiencia de navegación es más fluida y el código es más mantenible gracias a la estructura modular del masonry.
+
+
+---
+
+## 26 de enero de 2026, 10:15 GMT+1
+
+### Correcciones de opacidad y botones del lightbox
+
+#### Sinopsis
+
+Corrección de problemas de opacidad en hover de galería y en el lightbox, reducción del tamaño de las flechas de navegación, y reemplazo del botón de cerrar (X) por el botón back.webp.
+
+#### Problemas reportados
+
+El usuario reportó que las imágenes en la galería no mostraban el efecto de opacidad al hacer hover (no llegaban a 100% de opacidad). Las imágenes en el lightbox tampoco tenían opacidad completa. Las flechas de navegación del lightbox eran demasiado grandes a pesar de estar configuradas a 40px en el CSS. El botón de cerrar era una "X" de texto cuando debería ser el botón back.webp.
+
+#### Soluciones implementadas
+
+**Hover en galería:**
+- Restaurado el efecto de hover con `opacity: 0.7` por defecto
+- Al hacer hover: `opacity: 1` para feedback visual claro
+- Transición suave de 0.3s
+
+```css
+.gallery-item {
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.gallery-item:hover {
+    opacity: 1;
+}
+```
+
+**Opacidad en lightbox:**
+- Añadido `opacity: 1` explícitamente a `.lightbox img` para asegurar que la imagen se muestre al 100% de opacidad sin transparencia
+
+```css
+.lightbox img {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    opacity: 1;
+}
+```
+
+**Reducción de tamaño de flechas:**
+- Reducido `max-width` de `.lightbox-btn` de 40px a 30px
+- Esto hace que las flechas sean más discretas y no dominen la interfaz
+
+**Botón de cerrar con back.webp:**
+- Reemplazado el `<div>` con "×" por `<img>` con `back.webp`
+- Movido de esquina superior derecha a superior izquierda (consistente con navegación)
+- Tamaño: `max-width: 80px` (más grande que las flechas pero no excesivo)
+- Hover scale reducido a 1.1 para sutileza
+
+```html
+<!-- Antes -->
+<div class="lightbox-close">×</div>
+
+<!-- Después -->
+<img src="data/assets/buttons/back.webp" alt="Close" class="lightbox-close">
+```
+
+```css
+.lightbox-close {
+    position: fixed;
+    top: 2rem;
+    left: 2rem;
+    cursor: pointer;
+    z-index: 1001;
+    max-width: 80px;
+    transition: transform 0.2s;
+}
+```
+
+#### Resultado
+
+Las imágenes de la galería ahora responden visualmente al hover con un cambio claro de opacidad. Las imágenes en el lightbox se muestran al 100% de opacidad sin ninguna transparencia. Las flechas de navegación son más pequeñas y discretas (30px). El botón de cerrar usa el asset back.webp y está posicionado en la esquina superior izquierda, creando una jerarquía visual más clara y consistente con el resto de la interfaz.
+
+#### Archivos modificados
+
+- `style.css` - Hover opacity, tamaño de flechas, estilos del botón cerrar
+- `project.html` - Reemplazo de X por imagen back.webp
