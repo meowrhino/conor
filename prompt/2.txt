@@ -1,0 +1,19 @@
+home:
+
+me gustaría que el texto de conor ashlee-purle sea mas grande y que los textos de cada uno de lso proyectos puedan ser tan grandes coimo necesite, que no se deformen. que los 5 "links" que hay ahora en la home no distorsionen el tamaño del webp que usan como titulo
+luego que el abouyt en la home sea conor.webp
+
+about: 
+que en ela bout no haya el boton de about ;)
+y eliminar los links sino que estén incluidos en los 2 links, 
+el de email (cashlee.purle@gmail.com)
+y el de contacto (+44 (0) 747 5121424)
+
+igual ambos mail y telefono podrian estar en algun lugar del data.json para que asi sea facil de modificar en caso que cambien
+
+
+
+luego cada proyecto que las imagenes se carguen más como el proyecto de rauber que te dejo en snippets: una pantalla de carga y luego una grid que no sea perfecta sino que quede "dentada" por abajo para que haya espacio para la ficha técnica y los botones
+el proyecto de familuy archive va bien encaminado pero aun te dejo en snippets diary.zip por si acaso para que copies un poco mas como se establecen los links a los distintos albumes
+
+podrias hacer imagenes de texto escrito apra cada uno de los albumes e implementarlo?
