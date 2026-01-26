@@ -1,0 +1,9 @@
+vale cosas, los titulos de la home tienen que ser de titles no del webp de cada proyecto, si lo ves mas facil, renombra como "title" a cada uno de los titles correspondientes y lo metes en su carpeta correspondiente, luego en i am all ears las imagenes no se cargan, y en algunos proyectos como buttercup hay espacios en tre imagenes que no deberian de haber sino que deberian cargarse aprovechando el maximo de espacio y vers eligeramente mas pequeñas
+
+cuando haces jhover en un aimagen de la galeria de la grid me gustaria que se viese 100% de opacidad y que quites en la home el menu-title
+
+recuerda que te pedi en family archive que generases imagenes con el texto escrito para que vaya todo mas "homogeneo" y que el boton del about y de la home de arriba a la izquierda tenga alguna manera de ponerse "bien" en casos como en el family archive donde estará el boton de la home y el boton del about juntos (el de home siempre estará primero)
+
+
+
+y el tema de que la grid sea mas compacta no se como lo haria... me darias ideas?
