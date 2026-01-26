@@ -1,17 +1,87 @@
-projects
-
 {
-    title: i am all ears
-    slug: allEars
-}
-
-{
-    title: belladona
-    slug: belladona
-}
-
-{
-    title: pucker up butter cup
-    slug: buttercup
-    password: password
+  "projects": [
+    {
+      "slug": "allEars",
+      "title": "i am all ears",
+      "year": "2023",
+      "technique": "Mixed media",
+      "dimensions": "Variable",
+      "description": "An exploration of listening and attention through visual forms.",
+      "imageCount": 27,
+      "password": null,
+      "order": 1
+    },
+    {
+      "slug": "belladona",
+      "title": "belladona",
+      "year": "2023",
+      "technique": "Photography",
+      "dimensions": "Various",
+      "description": "A photographic series exploring themes of beauty and danger.",
+      "imageCount": 173,
+      "password": null,
+      "order": 2
+    },
+    {
+      "slug": "buttercup",
+      "title": "pucker up butter cup",
+      "year": "2024",
+      "technique": "Digital collage",
+      "dimensions": "Digital",
+      "description": "A playful investigation of color, texture, and digital manipulation.",
+      "imageCount": 228,
+      "password": "password",
+      "order": 3
+    }
+  ],
+  "commissions": [
+    {
+      "slug": "kate",
+      "title": "Kate",
+      "year": "2024",
+      "client": "Private commission",
+      "description": "Custom artwork created for private collection.",
+      "imageCount": 4,
+      "order": 1
+    },
+    {
+      "slug": "r1",
+      "title": "R1",
+      "year": "2024",
+      "client": "Private commission",
+      "description": "Commissioned work exploring personal narratives.",
+      "imageCount": 3,
+      "order": 2
+    },
+    {
+      "slug": "shainy",
+      "title": "Shainy",
+      "year": "2024",
+      "client": "Private commission",
+      "description": "Bespoke visual project for private client.",
+      "imageCount": 4,
+      "order": 3
+    }
+  ],
+  "familyArchive": [
+    {
+      "slug": "ashlee",
+      "title": "Ashlee",
+      "description": "Family archive collection spanning multiple decades.",
+      "folders": [
+        "1987_rhodes",
+        "1989",
+        "1990",
+        "1993_4",
+        "1993_wed",
+        "1994",
+        "1999_connor",
+        "2001",
+        "2002-2003",
+        "2003-2004_turkey",
+        "house",
+        "misc"
+      ]
+    }
+  ]
 }

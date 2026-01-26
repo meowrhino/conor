@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conor</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Mobile Gate Overlay -->
+    <div id="device-check-overlay" class="hidden">
+        <div id="device-check-message"></div>
+        <a href="#" id="mobile-check-why-link" class="hidden">Why?</a>
+        <div id="mobile-check-explanation" class="hidden">
+            This experience is designed for larger screens and requires a laptop or desktop with Chrome browser for optimal viewing.
+        </div>
+    </div>
+
+    <!-- About Button (top left) -->
+    <div id="about-btn" class="top-left-btn">
+        <img src="data/assets/titles/about.webp" alt="About">
+    </div>
+
+    <!-- Main Menu (centered) -->
+    <div id="main-menu" class="centered-container">
+        <div class="menu-section">
+            <div class="menu-title">
+                <img src="data/assets/titles/conor.webp" alt="Conor">
+            </div>
+            <div class="menu-buttons" id="projects-buttons"></div>
+        </div>
+        
+        <div class="menu-section">
+            <div class="menu-title">
+                <img src="data/assets/titles/commission.webp" alt="Commissions">
+            </div>
+            <div class="menu-buttons" id="commissions-buttons"></div>
+        </div>
+        
+        <div class="menu-section">
+            <div class="menu-title">
+                <img src="data/assets/titles/familyArchive.webp" alt="Family Archive">
+            </div>
+            <div class="menu-buttons" id="family-archive-buttons"></div>
+        </div>
+    </div>
+
+    <!-- Password Screen -->
+    <div id="password-screen" class="hidden">
+        <div class="password-container">
+            <img src="data/assets/password/password.webp" alt="Password" class="password-title">
+            <input type="password" id="password-input" class="password-input">
+            <div class="password-feedback">
+                <img id="password-feedback-img" src="" alt="" class="hidden">
+            </div>
+            <div class="password-buttons">
+                <img src="data/assets/buttons/back.webp" alt="Back" class="btn-back">
+            </div>
+        </div>
+    </div>
+
+    <!-- Project Gallery -->
+    <div id="gallery" class="hidden">
+        <div id="gallery-grid" class="gallery-grid"></div>
+        
+        <!-- Bottom right menu -->
+        <div id="gallery-menu" class="gallery-menu">
+            <img src="data/assets/buttons/info.webp" alt="Info" class="btn-info">
+            <img src="data/assets/buttons/....webp" alt="Menu" class="btn-more">
+        </div>
+
+        <!-- Technical info panel -->
+        <div id="info-panel" class="info-panel hidden">
+            <div id="info-content"></div>
+        </div>
+
+        <!-- Home button -->
+        <div class="btn-home-container">
+            <img src="data/assets/buttons/home.webp" alt="Home" class="btn-home">
+        </div>
+    </div>
+
+    <!-- About Screen -->
+    <div id="about-screen" class="hidden">
+        <div class="about-container">
+            <img src="data/bio/bio.webp" alt="Bio" class="bio-image">
+            <div class="about-sections">
+                <div class="about-section">
+                    <img src="data/assets/titles/email.webp" alt="Email" class="section-title">
+                    <div class="section-content">contact@conor.art</div>
+                </div>
+                <div class="about-section">
+                    <img src="data/assets/titles/phoneNumber.webp" alt="Phone" class="section-title">
+                    <div class="section-content">+00 000 000 000</div>
+                </div>
+            </div>
+            <div class="btn-home-container">
+                <img src="data/assets/buttons/home.webp" alt="Home" class="btn-home">
+            </div>
+        </div>
+    </div>
+
+    <!-- Noise overlay -->
+    <canvas id="noise-canvas"></canvas>
+
+    <script src="gate.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,354 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    overflow-x: hidden;
+    position: relative;
+    min-height: 100vh;
+    
+    /* Paper CSS pattern background */
+    background-color: #e5e5f7;
+    opacity: 0.8;
+    background-image: linear-gradient(#444cf7 2px, transparent 2px), 
+                      linear-gradient(90deg, #444cf7 2px, transparent 2px), 
+                      linear-gradient(#444cf7 1px, transparent 1px), 
+                      linear-gradient(90deg, #444cf7 1px, #e5e5f7 1px);
+    background-size: 50px 50px, 50px 50px, 10px 10px, 10px 10px;
+    background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
+}
+
+/* Noise Canvas */
+#noise-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.15;
+    mix-blend-mode: overlay;
+}
+
+/* Mobile Gate */
+#device-check-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    padding: 2rem;
+    text-align: center;
+}
+
+#device-check-overlay.hidden {
+    display: none;
+}
+
+#device-check-message {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    max-width: 600px;
+}
+
+#mobile-check-why-link {
+    color: #fff;
+    text-decoration: underline;
+    cursor: pointer;
+    margin-bottom: 1rem;
+}
+
+#mobile-check-explanation {
+    max-width: 500px;
+    margin-top: 1rem;
+    padding: 1rem;
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px;
+}
+
+/* Utility classes */
+.hidden {
+    display: none !important;
+}
+
+/* Top left button */
+.top-left-btn {
+    position: fixed;
+    top: 2rem;
+    left: 2rem;
+    cursor: pointer;
+    z-index: 100;
+    transition: transform 0.2s;
+}
+
+.top-left-btn:hover {
+    transform: scale(1.05);
+}
+
+.top-left-btn img {
+    max-width: 150px;
+    height: auto;
+}
+
+/* Centered container for main menu */
+.centered-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+    align-items: center;
+    z-index: 10;
+}
+
+.menu-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.menu-title img {
+    max-width: 300px;
+    height: auto;
+}
+
+.menu-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    max-width: 800px;
+}
+
+.menu-buttons img {
+    max-width: 200px;
+    height: auto;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.menu-buttons img:hover {
+    transform: scale(1.05);
+}
+
+/* Password Screen */
+#password-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+    background: rgba(229, 229, 247, 0.95);
+}
+
+.password-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.password-title {
+    max-width: 300px;
+}
+
+.password-input {
+    padding: 1rem 2rem;
+    font-size: 1.5rem;
+    border: 3px solid #444cf7;
+    background: #fff;
+    text-align: center;
+    min-width: 300px;
+}
+
+.password-feedback img {
+    max-width: 200px;
+    height: auto;
+}
+
+.password-buttons img {
+    max-width: 150px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.password-buttons img:hover {
+    transform: scale(1.05);
+}
+
+/* Gallery */
+#gallery {
+    width: 100%;
+    min-height: 100vh;
+    padding: 2rem;
+    padding-bottom: 25dvh;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.gallery-grid img {
+    width: 100%;
+    height: auto;
+    display: block;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.5s forwards;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Staggered effect */
+.gallery-grid img:nth-child(odd) {
+    transform: translateY(10px);
+}
+
+.gallery-grid img:nth-child(even) {
+    transform: translateY(30px);
+}
+
+/* Gallery menu (bottom right) */
+.gallery-menu {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    display: flex;
+    gap: 1rem;
+    z-index: 100;
+}
+
+.gallery-menu img {
+    max-width: 80px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.gallery-menu img:hover {
+    transform: scale(1.1);
+}
+
+/* Info panel */
+.info-panel {
+    position: fixed;
+    bottom: 8rem;
+    right: 2rem;
+    background: rgba(255, 255, 255, 0.95);
+    border: 3px solid #444cf7;
+    padding: 2rem;
+    max-width: 400px;
+    z-index: 99;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+#info-content {
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+#info-content h3 {
+    margin-bottom: 1rem;
+    color: #444cf7;
+}
+
+#info-content p {
+    margin-bottom: 0.5rem;
+}
+
+/* Home button */
+.btn-home-container {
+    position: fixed;
+    top: 2rem;
+    left: 2rem;
+    z-index: 100;
+}
+
+.btn-home {
+    max-width: 100px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.btn-home:hover {
+    transform: scale(1.1);
+}
+
+/* About Screen */
+#about-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+    padding: 2rem;
+}
+
+.about-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    max-width: 800px;
+}
+
+.bio-image {
+    max-width: 500px;
+    width: 100%;
+    height: auto;
+}
+
+.about-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+.about-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.section-title {
+    max-width: 200px;
+}
+
+.section-content {
+    font-size: 1.2rem;
+    color: #444cf7;
+    font-weight: bold;
+}
