@@ -1,0 +1,47 @@
+una web en HTML CSS Y JS
+
+NO funcionará en móviles en mobile-gate-simple hay un ejemplo de código para que no funcione en móviles
+
+y, en principio, no tendrá texto escrito, sino que todo será con botones con imagen
+
+
+
+
+la página principal será un menú con los proyectos, centrados vertical y horizontalmente
+dentro de este div centrado verticla y horizontalmente habrán 2 divs que servirá para establecer un gap entre ambos
+el primero tendrá los proyectos de projects
+y el segundo tendrá commisions
+y el tecero tendrá tendrá family Archive
+
+y arriba a la izquierda tendrá el about
+
+los webp con las imagenes para todo esto están en data/assets/buttons
+cuando clicas en un proyecto con password en data/assets/password hay las cosas que puedes necesitar creo para temas botones y tal
+
+el fondo quiero que sea a partir del snipper de paper css 
+
+y me gustaria ver de que manera podemos añadir una capa de ruido estatico encima!!!
+
+
+
+los proyectos cuando clicas en cada uno de ellos se van cargando en una grid que queda ligeramente escalonada en la parte inferior
+en plan va cargando imagen por imagen en un css grid donde todas las imagenes quedan "una junto a otra"
+y abajo queda un margen al que le añades 20dvh
+
+para abajho a la derecha añadir un menu con los botones "info" y "..."
+y la ficha técnica de cada proyecto!!! que te la puedes inventar por ahora
+
+
+
+toda la info ha de estar en data.json, pero ten en cuenta la estructura de los archivos (y recomiendame si podemos mejorar algo)
+para asi ahorrar en datos innecesarios en el data.json
+(por ejemplo las imagenes de cada proyecto estaran en una carpeta img en la carpeta con el slug
+el titulo de cada proyecto estará en assets/titles
+etc etc)
+
+
+
+antes de ponerte a hacer nada revisa la estructura de los archivos por si se podrian mejorar cosas a la hora de organizarlos
+y entonces me propones una estructura para el data.json
+
+y luego hacemos una primera iteracion de la web

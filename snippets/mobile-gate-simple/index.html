@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mobile Gate (Simple)</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Gate overlay: hidden by default; JS decides when to show it -->
+  <div id="device-check-overlay" class="hidden" aria-live="polite">
+    <div id="device-check-content">
+      <p id="device-check-message"></p>
+
+      <a id="mobile-check-why-link" class="hidden" href="#">Why?</a>
+      <div id="mobile-check-explanation" class="hidden">
+        <p class="mobile-check-explanation-text">
+          this page is not made to be viewed on a phone... sorryy
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Real site content -->
+  <main id="site">
+    <h1>Desktop content</h1>
+    <p>If you shrink your window (or open on a phone), you should see the gate overlay.</p>
+  </main>
+
+  <script src="gate.js"></script>
+</body>
+</html>
