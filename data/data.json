@@ -1,4 +1,8 @@
 {
+  "contact": {
+    "email": "cashlee.purle@gmail.com",
+    "phone": "+44 (0) 747 5121424"
+  },
   "projects": [
     {
       "slug": "allEars",
@@ -68,19 +72,55 @@
       "slug": "ashlee",
       "title": "Ashlee",
       "description": "Family archive collection spanning multiple decades.",
-      "folders": [
-        "1987_rhodes",
-        "1989",
-        "1990",
-        "1993_4",
-        "1993_wed",
-        "1994",
-        "1999_connor",
-        "2001",
-        "2002-2003",
-        "2003-2004_turkey",
-        "house",
-        "misc"
+      "albums": [
+        {
+          "slug": "1987_rhodes",
+          "title": "1987 Rhodes"
+        },
+        {
+          "slug": "1989",
+          "title": "1989"
+        },
+        {
+          "slug": "1990",
+          "title": "1990"
+        },
+        {
+          "slug": "1993_4",
+          "title": "1993-4"
+        },
+        {
+          "slug": "1993_wed",
+          "title": "1993 Wedding"
+        },
+        {
+          "slug": "1994",
+          "title": "1994"
+        },
+        {
+          "slug": "1999_connor",
+          "title": "1999 Connor"
+        },
+        {
+          "slug": "2001",
+          "title": "2001"
+        },
+        {
+          "slug": "2002-2003",
+          "title": "2002-2003"
+        },
+        {
+          "slug": "2003-2004_turkey",
+          "title": "2003-2004 Turkey"
+        },
+        {
+          "slug": "house",
+          "title": "House"
+        },
+        {
+          "slug": "misc",
+          "title": "Misc"
+        }
       ]
     }
   ]

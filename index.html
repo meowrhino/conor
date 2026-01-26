@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conor</title>
+    <title>Conor Ashlee-Purle</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -18,26 +18,29 @@
 
     <!-- About Button (top left) -->
     <div id="about-btn" class="top-left-btn">
-        <img src="data/assets/titles/about.webp" alt="About">
+        <img src="data/assets/titles/conor.webp" alt="About">
     </div>
 
     <!-- Main Menu (centered) -->
     <div id="main-menu" class="centered-container">
-        <div class="menu-section">
+        <div class="menu-section main-title">
             <div class="menu-title">
-                <img src="data/assets/titles/conor.webp" alt="Conor">
+                <img src="data/assets/titles/conor.webp" alt="Conor Ashlee-Purle">
             </div>
+        </div>
+
+        <div class="menu-section">
             <div class="menu-buttons" id="projects-buttons"></div>
         </div>
         
         <div class="menu-section menu-link" id="commissions-link">
-            <div class="menu-title">
+            <div class="menu-title clickable">
                 <img src="data/assets/titles/commission.webp" alt="Commissions">
             </div>
         </div>
         
         <div class="menu-section menu-link" id="family-archive-link">
-            <div class="menu-title">
+            <div class="menu-title clickable">
                 <img src="data/assets/titles/familyArchive.webp" alt="Family Archive">
             </div>
         </div>
@@ -45,11 +48,13 @@
 
     <!-- Commissions Screen -->
     <div id="commissions-screen" class="section-screen hidden">
-        <div class="menu-section">
-            <div class="menu-title">
-                <img src="data/assets/titles/commission.webp" alt="Commissions">
+        <div class="centered-container">
+            <div class="menu-section">
+                <div class="menu-title">
+                    <img src="data/assets/titles/commission.webp" alt="Commissions">
+                </div>
+                <div class="menu-buttons" id="commissions-buttons"></div>
             </div>
-            <div class="menu-buttons" id="commissions-buttons"></div>
         </div>
         <div class="btn-home-container">
             <img src="data/assets/buttons/home.webp" alt="Home" class="btn-home">
@@ -58,12 +63,14 @@
 
     <!-- Family Archive Screen -->
     <div id="family-archive-screen" class="section-screen hidden">
-        <div class="menu-section">
-            <div class="menu-title">
-                <img src="data/assets/titles/familyArchive.webp" alt="Family Archive">
+        <div class="centered-container">
+            <div class="menu-section">
+                <div class="menu-title">
+                    <img src="data/assets/titles/familyArchive.webp" alt="Family Archive">
+                </div>
             </div>
+            <div id="family-archive-albums" class="album-links"></div>
         </div>
-        <div id="family-archive-sections" class="family-archive-sections"></div>
         <div class="btn-home-container">
             <img src="data/assets/buttons/home.webp" alt="Home" class="btn-home">
         </div>
@@ -83,51 +90,10 @@
         </div>
     </div>
 
-    <!-- Project Gallery -->
-    <div id="gallery" class="hidden">
-        <div id="gallery-grid" class="gallery-grid"></div>
-        
-        <!-- Bottom right menu -->
-        <div id="gallery-menu" class="gallery-menu">
-            <img src="data/assets/buttons/info.webp" alt="Info" class="btn-info">
-            <img src="data/assets/buttons/....webp" alt="Menu" class="btn-more">
-        </div>
-
-        <!-- Technical info panel -->
-        <div id="info-panel" class="info-panel hidden">
-            <div id="info-content"></div>
-        </div>
-
-        <!-- Home button -->
-        <div class="btn-home-container">
-            <img src="data/assets/buttons/home.webp" alt="Home" class="btn-home">
-        </div>
-    </div>
-
-    <!-- About Screen -->
-    <div id="about-screen" class="hidden">
-        <div class="about-container">
-            <img src="data/bio/bio.webp" alt="Bio" class="bio-image">
-            <div class="about-sections">
-                <div class="about-section">
-                    <img src="data/assets/titles/email.webp" alt="Email" class="section-title">
-                    <div class="section-content">contact@conor.art</div>
-                </div>
-                <div class="about-section">
-                    <img src="data/assets/titles/phoneNumber.webp" alt="Phone" class="section-title">
-                    <div class="section-content">+00 000 000 000</div>
-                </div>
-            </div>
-            <div class="btn-home-container">
-                <img src="data/assets/buttons/home.webp" alt="Home" class="btn-home">
-            </div>
-        </div>
-    </div>
-
     <!-- Noise overlay -->
     <canvas id="noise-canvas"></canvas>
 
     <script src="gate.js"></script>
-    <script src="app.js"></script>
+    <script src="home.js"></script>
 </body>
 </html>

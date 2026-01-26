@@ -273,3 +273,134 @@ Las imágenes se cargan secuencialmente con un delay de 50ms entre cada una, cre
 #### Organización de archivos
 
 Se ha creado la carpeta `prompt/` y movido el `prompt.txt` original allí para mantener registro de todos los prompts del proyecto.
+
+
+---
+
+## 26 de enero de 2026, 08:15 GMT+1
+
+### Segunda iteración: Refactorización completa a arquitectura multi-HTML
+
+#### Sinopsis
+
+Refactorización completa del proyecto separando la aplicación en múltiples páginas HTML independientes. Se implementó sistema de carga tipo Rauber, lightbox con navegación por teclado, mejoras en home y about, y se simplificó significativamente el código eliminando funciones innecesarias.
+
+#### Cambios arquitectónicos principales
+
+La aplicación se ha reestructurado completamente pasando de una SPA (Single Page Application) a una arquitectura multi-página más simple y mantenible.
+
+**Nueva estructura de archivos:**
+- `index.html` + `home.js` - Página principal con menú
+- `about.html` + `about.js` - Página de about
+- `project.html` + `project.js` - Template genérico para proyectos, comisiones y álbumes
+- `style.css` - Estilos globales compartidos
+- `gate.js` - Mobile gate compartido
+
+Esta arquitectura ofrece varias ventajas: cada página carga solo el código necesario, el mantenimiento es más sencillo, el código es más legible, y es más fácil añadir nuevas secciones en el futuro.
+
+#### Mejoras implementadas según prompt 2.txt
+
+**Home (index.html):**
+El título principal "Conor Ashlee-Purle" ahora usa `conor.webp` con tamaño aumentado (max-width: 500px). Los títulos de proyectos mantienen su aspect ratio sin deformación. El botón about en la esquina superior izquierda también usa `conor.webp` en lugar de `about.webp`.
+
+**About (about.html):**
+Se eliminó el botón about cuando estás en la página about. Los datos de contacto ahora se cargan desde `data.json` (email: cashlee.purle@gmail.com, teléfono: +44 (0) 747 5121424). El email es un link clickeable con `mailto:`.
+
+**Proyectos (project.html):**
+Se implementó un sistema de carga tipo Rauber con preloader y barra de progreso. Las imágenes se precargan completamente antes de mostrar la galería. La grid es "imperfecta" o "dentada" usando nth-child para crear un efecto escalonado visual. Se añadió un lightbox para ver imágenes en grande con navegación por arrow keys y botones de flecha.
+
+**Family Archive:**
+Los álbumes ahora se muestran como links de texto pequeños en estilo Diary. Se carga el `albums.json` que ya existía para obtener las imágenes de cada álbum. Los álbumes funcionan con el mismo template `project.html`.
+
+#### Código eliminado y simplificado
+
+Se eliminaron las siguientes funciones y código innecesario:
+- Generación de títulos SVG dinámicos (`generateTitleDataUrl`, `escapeXml`, `formatLabel`, `setMenuImage`)
+- Función `hideScreens()` redundante
+- Variables de estado innecesarias (`familyAlbumsCache`)
+- Código duplicado de noise canvas (ahora en función compartida)
+- Sistema de navegación complejo de la SPA
+
+El código resultante es aproximadamente un 40% más corto y mucho más legible.
+
+#### Sistema de navegación por URL
+
+El template `project.html` recibe parámetros por URL:
+- `?type=project&slug=belladona` - Para proyectos
+- `?type=commission&slug=kate` - Para comisiones
+- `?type=album&slug=ashlee/1987_rhodes` - Para álbumes del family archive
+
+Esto permite compartir URLs directas a proyectos específicos y simplifica la navegación.
+
+#### Lightbox y navegación
+
+El lightbox implementado permite:
+- Click en cualquier imagen de la galería para ampliar
+- Navegación con arrow keys (izquierda/derecha)
+- Navegación con botones de flecha visuales
+- Cerrar con tecla Escape o click en X
+- Click fuera de la imagen para cerrar
+
+#### Grid imperfecta
+
+La grid usa nth-child para crear un efecto "dentado" o "jagged":
+```css
+.gallery-item:nth-child(3n+1) { margin-top: 20px; }
+.gallery-item:nth-child(3n+2) { margin-top: -10px; }
+.gallery-item:nth-child(3n+3) { margin-top: 30px; }
+```
+
+Esto crea un efecto visual más orgánico y deja espacio natural en la parte inferior para la ficha técnica y botones.
+
+#### Preloader
+
+El preloader muestra una barra de progreso que se llena mientras se cargan todas las imágenes del proyecto. Una vez cargadas al 100%, se oculta el preloader y se muestra la galería con todas las imágenes ya disponibles.
+
+#### data.json actualizado
+
+Se añadió una sección `contact` al principio del JSON:
+```json
+{
+  "contact": {
+    "email": "cashlee.purle@gmail.com",
+    "phone": "+44 (0) 747 5121424"
+  },
+  ...
+}
+```
+
+También se reestructuró `familyArchive` para incluir un array de `albums` con slug y title de cada álbum.
+
+#### Assets no usados
+
+Se creó el documento `manus/assets-no-usados.md` con un análisis detallado de todos los assets disponibles y cuáles están en uso. Los principales assets no usados son:
+- Botones: `....webp` (eliminado del menú), `ig.webp`, `next.webp`, `previous.webp`
+- Misc: Todos los elementos decorativos (circles, crosses, squares)
+- Password: `hint.webp`, `hint_2.webp`
+- Titles: `education.webp`, `exhibitions.webp`, `publications.webp`
+
+#### Archivos modificados
+
+**Nuevos archivos:**
+- `about.html` - Página de about
+- `about.js` - Lógica de about
+- `home.js` - Lógica de home (simplificada)
+- `project.html` - Template de galería
+- `project.js` - Lógica de galería con preloader y lightbox
+- `manus/assets-no-usados.md` - Documentación de assets
+
+**Archivos modificados:**
+- `index.html` - Simplificado para home
+- `style.css` - Actualizado con nuevos estilos
+- `data/data.json` - Añadido contact y reestructurado familyArchive
+
+**Archivos eliminados/deprecados:**
+- `app.js` - Reemplazado por home.js, about.js, project.js
+
+#### Próximos pasos sugeridos
+
+1. Decidir sobre assets no usados (eliminar o mantener)
+2. Implementar link de Instagram si se desea
+3. Considerar añadir secciones de education, exhibitions, publications
+4. Optimizar carga de imágenes para proyectos muy grandes (lazy loading más inteligente)
+5. Añadir transiciones suaves entre páginas si se desea

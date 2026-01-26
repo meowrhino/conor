@@ -1,0 +1,1 @@
+body{overscroll-behavior:none}::-webkit-scrollbar{display:none}*{margin:0;padding:0;box-sizing:border-box}.overlay.active{display:block}.clicklistener{z-index:999}.crossfm,.otherlinks,.crosssyofuckme,.backlink{opacity:.75;transition:opacity .15s ease-in-out}.crossfm:hover,.otherlinks:hover,.crosssyofuckme:hover,.backlink:hover{opacity:1}

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Mobile Gate Overlay -->
+    <div id="device-check-overlay" class="hidden">
+        <div id="device-check-message"></div>
+        <a href="#" id="mobile-check-why-link" class="hidden">Why?</a>
+        <div id="mobile-check-explanation" class="hidden">
+            This experience is designed for larger screens and requires a laptop or desktop with Chrome browser for optimal viewing.
+        </div>
+    </div>
+
+    <!-- Preloader -->
+    <div id="preloader" class="preloader">
+        <div id="loader-bar"></div>
+    </div>
+
+    <!-- Project Gallery -->
+    <div id="gallery" class="hidden">
+        <div id="gallery-grid" class="gallery-grid"></div>
+        
+        <!-- Bottom right menu -->
+        <div id="gallery-menu" class="gallery-menu">
+            <img src="data/assets/buttons/info.webp" alt="Info" class="btn-info">
+        </div>
+
+        <!-- Technical info panel -->
+        <div id="info-panel" class="info-panel hidden">
+            <div id="info-content"></div>
+        </div>
+
+        <!-- Home button -->
+        <div class="btn-home-container">
+            <img src="data/assets/buttons/home.webp" alt="Home" class="btn-home">
+        </div>
+    </div>
+
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox hidden">
+        <img id="lightbox-image" src="" alt="">
+        <div class="lightbox-nav">
+            <img src="data/assets/buttons/arrow_left.webp" alt="Previous" class="lightbox-btn btn-prev">
+            <img src="data/assets/buttons/arrow_right.webp" alt="Next" class="lightbox-btn btn-next">
+        </div>
+        <div class="lightbox-close">×</div>
+    </div>
+
+    <!-- Noise overlay -->
+    <canvas id="noise-canvas"></canvas>
+
+    <script src="gate.js"></script>
+    <script src="project.js"></script>
+</body>
+</html>
