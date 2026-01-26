@@ -26,6 +26,20 @@ async function init() {
     setupEventListeners();
 }
 
+async function loadImageManifest(path) {
+    try {
+        const response = await fetch(path);
+        if (!response.ok) return null;
+        const data = await response.json();
+        if (Array.isArray(data)) return data;
+        if (Array.isArray(data.images)) return data.images;
+        return null;
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+}
+
 // Load project data and images
 async function loadProject() {
     // Find project data
@@ -60,7 +74,7 @@ async function loadProject() {
     }
     
     // Prepare images array
-    prepareImages();
+    await prepareImages();
     
     // Show preloader and load images
     await preloadImages();
@@ -77,7 +91,7 @@ async function loadProject() {
 }
 
 // Prepare images array based on type
-function prepareImages() {
+async function prepareImages() {
     images = [];
     
     if (currentType === 'album') {
@@ -89,7 +103,15 @@ function prepareImages() {
         const basePath = currentType === 'project' 
             ? `data/projects/${currentSlug}/img/`
             : `data/commission/${currentSlug}/`;
-        
+
+        if (currentType === 'project') {
+            const manifest = await loadImageManifest(`data/projects/${currentSlug}/images.json`);
+            if (manifest && manifest.length) {
+                manifest.forEach(file => images.push(basePath + file));
+                return;
+            }
+        }
+
         for (let i = 1; i <= currentProject.imageCount; i++) {
             images.push(`${basePath}${i}.webp`);
         }
@@ -129,7 +151,7 @@ function renderMasonryGallery() {
     grid.innerHTML = '';
     
     // Create columns for masonry
-    const columnCount = 3;
+    const columnCount = window.innerWidth < 900 ? 2 : 3;
     const columns = [];
     for (let i = 0; i < columnCount; i++) {
         const column = document.createElement('div');
@@ -151,11 +173,9 @@ function renderMasonryGallery() {
         
         container.appendChild(img);
         
-        // Add to shortest column
-        const shortestColumn = columns.reduce((shortest, current) => {
-            return current.offsetHeight < shortest.offsetHeight ? current : shortest;
-        });
-        shortestColumn.appendChild(container);
+        // Add in round-robin to avoid single-column collapse before layout settles
+        const targetColumn = columns[index % columnCount];
+        targetColumn.appendChild(container);
     });
 }
 

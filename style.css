@@ -148,6 +148,12 @@ body {
     max-width: 900px;
 }
 
+#main-menu .menu-buttons {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
 .menu-buttons img {
     max-width: 200px;
     height: auto;
@@ -169,24 +175,30 @@ body {
     z-index: 50;
 }
 
-/* Album links (now images) */
+/* Album links */
 .album-links {
     display: flex;
-    flex-direction: column;
-    gap: 1rem;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
     align-items: center;
-    max-width: 700px;
+    justify-content: center;
+    max-width: 900px;
 }
 
-.album-link {
-    max-width: 400px;
-    height: auto;
+.album-date {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 0.9rem;
+    letter-spacing: 0.02em;
+    color: #444cf7;
     cursor: pointer;
-    transition: transform 0.2s;
+    font-family: inherit;
+    white-space: nowrap;
 }
 
-.album-link:hover {
-    transform: scale(1.02);
+.album-date:hover {
+    text-decoration: underline;
 }
 
 /* Password Screen */
@@ -288,12 +300,7 @@ body {
 .gallery-item {
     position: relative;
     cursor: pointer;
-    transition: opacity 0.3s ease;
-    opacity: 0.7;
-}
-
-.gallery-item:hover {
-    opacity: 1;
+    transition: transform 0.2s ease;
 }
 
 .gallery-item img {
@@ -389,18 +396,23 @@ body {
 
 .lightbox-nav {
     position: fixed;
-    bottom: 3rem;
-    left: 50%;
-    transform: translateX(-50%);
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
     display: flex;
-    gap: 2rem;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
     z-index: 1001;
+    pointer-events: none;
 }
 
 .lightbox-btn {
-    max-width: 60px;
+    max-width: 40px;
     cursor: pointer;
     transition: transform 0.2s, opacity 0.2s;
+    pointer-events: auto;
 }
 
 .lightbox-btn:hover {

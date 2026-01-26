@@ -11,6 +11,15 @@ async function init() {
     setupEventListeners();
 }
 
+function setTitleImage(img, slug, fallbackSrc) {
+    const preferredSrc = `data/assets/titles/${slug}.webp`;
+    img.src = preferredSrc;
+    img.onerror = () => {
+        img.onerror = null;
+        img.src = fallbackSrc;
+    };
+}
+
 // Setup static noise overlay
 function setupNoiseCanvas() {
     const canvas = document.getElementById('noise-canvas');
@@ -53,7 +62,7 @@ function populateMenu() {
     const projectsContainer = document.getElementById('projects-buttons');
     appData.projects.forEach(project => {
         const img = document.createElement('img');
-        img.src = `data/projects/${project.slug}/title.webp`;
+        setTitleImage(img, project.slug, `data/projects/${project.slug}/title.webp`);
         img.alt = project.title;
         img.addEventListener('click', () => handleProjectClick(project));
         projectsContainer.appendChild(img);
@@ -73,12 +82,12 @@ function populateMenu() {
     const albumsContainer = document.getElementById('family-archive-albums');
     const archive = appData.familyArchive[0];
     archive.albums.forEach(album => {
-        const link = document.createElement('img');
-        link.className = 'album-link';
-        link.src = `data/familyArchive/${archive.slug}/${album.slug}/title.webp`;
-        link.alt = album.title;
-        link.addEventListener('click', () => goToProject('album', `${archive.slug}/${album.slug}`));
-        albumsContainer.appendChild(link);
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'album-date';
+        button.textContent = album.title;
+        button.addEventListener('click', () => goToProject('album', `${archive.slug}/${album.slug}`));
+        albumsContainer.appendChild(button);
     });
 }
 
