@@ -72,6 +72,8 @@ async function loadProject() {
         window.location.href = 'index.html';
         return;
     }
+
+    document.title = currentProject.title;
     
     // Prepare images array
     await prepareImages();
@@ -212,8 +214,8 @@ function updateLightboxButtons() {
     const prevBtn = document.querySelector('.btn-prev');
     const nextBtn = document.querySelector('.btn-next');
     
-    prevBtn.style.opacity = currentImageIndex === 0 ? '0.3' : '1';
-    nextBtn.style.opacity = currentImageIndex === images.length - 1 ? '0.3' : '1';
+    prevBtn.style.opacity = currentImageIndex === 0 ? '0.3' : '';
+    nextBtn.style.opacity = currentImageIndex === images.length - 1 ? '0.3' : '';
 }
 
 // Setup info panel content
@@ -236,42 +238,6 @@ function setupInfoPanel() {
             <p><strong>Description:</strong> ${currentProject.description}</p>
         `;
     }
-}
-
-// Setup static noise overlay
-function setupNoiseCanvas() {
-    const canvas = document.getElementById('noise-canvas');
-    const ctx = canvas.getContext('2d');
-    
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    
-    function drawNoise() {
-        const imageData = ctx.createImageData(canvas.width, canvas.height);
-        const data = imageData.data;
-        
-        for (let i = 0; i < data.length; i += 4) {
-            const noise = Math.random() * 255;
-            data[i] = noise;
-            data[i + 1] = noise;
-            data[i + 2] = noise;
-            data[i + 3] = 255;
-        }
-        
-        ctx.putImageData(imageData, 0, 0);
-    }
-    
-    function animateNoise() {
-        drawNoise();
-        requestAnimationFrame(animateNoise);
-    }
-    
-    animateNoise();
-    
-    window.addEventListener('resize', () => {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    });
 }
 
 // Setup event listeners

@@ -25,42 +25,6 @@ function setHomeState(isHome) {
     document.body.classList.toggle('is-home', isHome);
 }
 
-// Setup static noise overlay
-function setupNoiseCanvas() {
-    const canvas = document.getElementById('noise-canvas');
-    const ctx = canvas.getContext('2d');
-    
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    
-    function drawNoise() {
-        const imageData = ctx.createImageData(canvas.width, canvas.height);
-        const data = imageData.data;
-        
-        for (let i = 0; i < data.length; i += 4) {
-            const noise = Math.random() * 255;
-            data[i] = noise;
-            data[i + 1] = noise;
-            data[i + 2] = noise;
-            data[i + 3] = 255;
-        }
-        
-        ctx.putImageData(imageData, 0, 0);
-    }
-    
-    function animateNoise() {
-        drawNoise();
-        requestAnimationFrame(animateNoise);
-    }
-    
-    animateNoise();
-    
-    window.addEventListener('resize', () => {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    });
-}
-
 // Populate menu with buttons
 function populateMenu() {
     // Projects
@@ -87,12 +51,11 @@ function populateMenu() {
     const albumsContainer = document.getElementById('family-archive-albums');
     const archive = appData.familyArchive[0];
     archive.albums.forEach(album => {
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'album-date';
-        button.textContent = album.title;
-        button.addEventListener('click', () => goToProject('album', `${archive.slug}/${album.slug}`));
-        albumsContainer.appendChild(button);
+        const img = document.createElement('img');
+        img.src = `data/familyArchive/${archive.slug}/${album.slug}/title.webp`;
+        img.alt = album.title;
+        img.addEventListener('click', () => goToProject('album', `${archive.slug}/${album.slug}`));
+        albumsContainer.appendChild(img);
     });
 }
 

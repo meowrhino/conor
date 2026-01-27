@@ -20,19 +20,6 @@ body {
     background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
 }
 
-/* Noise Canvas */
-#noise-canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 9999;
-    opacity: 0.15;
-    mix-blend-mode: overlay;
-}
-
 /* Mobile Gate */
 #device-check-overlay {
     position: fixed;
@@ -94,6 +81,12 @@ body {
 .about-btn img {
     max-width: 180px;
     height: auto;
+    opacity: 0.85;
+    transition: opacity 0.3s ease, transform 0.2s;
+}
+
+.about-btn:hover img {
+    opacity: 1;
 }
 
 .top-left-actions {
@@ -135,6 +128,8 @@ body.is-home .top-left-actions .btn-home {
     max-height: 70px;
     height: auto;
     display: block;
+    opacity: 0.85;
+    transition: opacity 0.3s ease, transform 0.2s;
 }
 
 .menu-title.clickable {
@@ -142,8 +137,9 @@ body.is-home .top-left-actions .btn-home {
     transition: transform 0.2s;
 }
 
-.menu-title.clickable:hover {
+.menu-title.clickable:hover img {
     transform: scale(1.05);
+    opacity: 1;
 }
 
 .menu-buttons {
@@ -164,7 +160,8 @@ body.is-home .top-left-actions .btn-home {
     max-height: 50px;
     height: auto;
     cursor: pointer;
-    transition: transform 0.2s;
+    opacity: 0.85;
+    transition: transform 0.2s, opacity 0.3s ease;
 }
 
 #commissions-screen .menu-buttons img {
@@ -173,6 +170,7 @@ body.is-home .top-left-actions .btn-home {
 
 .menu-buttons img:hover {
     transform: scale(1.05);
+    opacity: 1;
 }
 
 /* Section screens */
@@ -189,26 +187,23 @@ body.is-home .top-left-actions .btn-home {
 .album-links {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.75rem 1.5rem;
+    gap: 1rem 1.5rem;
     align-items: center;
     justify-content: center;
     max-width: 900px;
 }
 
-.album-date {
-    background: none;
-    border: none;
-    padding: 0;
-    font-size: 0.9rem;
-    letter-spacing: 0.02em;
-    color: #444cf7;
+.album-links img {
+    max-height: 50px;
+    height: auto;
     cursor: pointer;
-    font-family: inherit;
-    white-space: nowrap;
+    opacity: 0.85;
+    transition: transform 0.2s, opacity 0.3s ease;
 }
 
-.album-date:hover {
-    text-decoration: underline;
+.album-links img:hover {
+    transform: scale(1.05);
+    opacity: 1;
 }
 
 /* Password Screen */
@@ -254,11 +249,13 @@ body.is-home .top-left-actions .btn-home {
 .password-buttons img {
     max-width: 150px;
     cursor: pointer;
-    transition: transform 0.2s;
+    opacity: 0.85;
+    transition: transform 0.2s, opacity 0.3s ease;
 }
 
 .password-buttons img:hover {
     transform: scale(1.05);
+    opacity: 1;
 }
 
 /* Preloader */
@@ -336,11 +333,13 @@ body.is-home .top-left-actions .btn-home {
 .gallery-menu img {
     max-width: 80px;
     cursor: pointer;
-    transition: transform 0.2s;
+    opacity: 0.85;
+    transition: transform 0.2s, opacity 0.3s ease;
 }
 
 .gallery-menu img:hover {
     transform: scale(1.1);
+    opacity: 1;
 }
 
 /* Info panel */
@@ -382,11 +381,13 @@ body.is-home .top-left-actions .btn-home {
 .btn-home {
     max-width: 100px;
     cursor: pointer;
-    transition: transform 0.2s;
+    opacity: 0.85;
+    transition: transform 0.2s, opacity 0.3s ease;
 }
 
 .btn-home:hover {
     transform: scale(1.1);
+    opacity: 1;
 }
 
 /* Lightbox */
@@ -427,12 +428,14 @@ body.is-home .top-left-actions .btn-home {
 .lightbox-btn {
     max-width: 100px;
     cursor: pointer;
-    transition: transform 0.2s, opacity 0.2s;
+    transition: transform 0.2s, opacity 0.3s ease;
     pointer-events: auto;
+    opacity: 0.85;
 }
 
 .lightbox-btn:hover {
     transform: scale(1.1);
+    opacity: 1 !important;
 }
 
 .lightbox-close {
@@ -442,11 +445,13 @@ body.is-home .top-left-actions .btn-home {
     cursor: pointer;
     z-index: 1001;
     max-width: 80px;
-    transition: transform 0.2s;
+    opacity: 0.85;
+    transition: transform 0.2s, opacity 0.3s ease;
 }
 
 .lightbox-close:hover {
     transform: scale(1.1);
+    opacity: 1;
 }
 
 /* About Screen */
@@ -504,9 +509,11 @@ body.is-home .top-left-actions .btn-home {
 
 .section-title {
     max-width: 200px;
-    transition: transform 0.2s;
+    opacity: 0.85;
+    transition: transform 0.2s, opacity 0.3s ease;
 }
 
 .about-action:hover .section-title {
     transform: scale(1.05);
+    opacity: 1;
 }

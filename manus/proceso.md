@@ -636,3 +636,128 @@ Las imágenes de la galería ahora responden visualmente al hover con un cambio 
 
 - `style.css` - Hover opacity, tamaño de flechas, estilos del botón cerrar
 - `project.html` - Reemplazo de X por imagen back.webp
+
+
+---
+
+## 27 de enero de 2026
+
+### Quinta iteración: Noise solo en fondo, opacity en botones, álbumes con imágenes, y refactor de noise
+
+#### Sinopsis
+
+Corrección del noise canvas para que solo afecte al fondo (cuadrícula) y no al contenido. Aplicación de opacity 0.85 a todos los botones/elementos interactivos con hover a 1. Conversión de los botones de texto de family albums a imágenes de título. Extracción del código de noise a archivo compartido y optimización a render estático.
+
+#### Problemas identificados y soluciones
+
+**1. Noise canvas tapaba el contenido (z-index 9999 → 1)**
+
+El canvas de ruido tenía `z-index: 9999`, lo que lo colocaba encima de absolutamente todo: imágenes de galería, lightbox, botones, etc. Aunque tenía `pointer-events: none` (no bloqueaba clicks), visualmente el ruido se aplicaba sobre las imágenes y el contenido, no solo sobre el fondo de cuadrícula.
+
+Solución: Se bajó el `z-index` del canvas a `1` y se añadió `position: relative; z-index: 2` al `#gallery` para que el contenido quede por encima del noise. Los demás contenedores ya tenían z-index superiores (`.centered-container: 10`, `.section-screen: 50`, `.top-left-actions: 100`, `.lightbox: 1000`).
+
+**2. Opacity 0.85 en todos los botones/elementos interactivos**
+
+Las imágenes de galería ya tenían `opacity: 0.7` con hover a `1`, pero los botones y elementos de navegación no tenían opacity reducida. Se aplicó `opacity: 0.85` con transición a `1` en hover a todos los elementos interactivos:
+
+- `.about-btn img` (botón Conor/about)
+- `.menu-title img` (títulos de secciones commission, family archive)
+- `.menu-buttons img` (botones de proyectos y comisiones)
+- `.album-links img` (imágenes de título de álbumes)
+- `.btn-home` (botón home)
+- `.gallery-menu img` (botón info)
+- `.lightbox-btn` (flechas de navegación del lightbox)
+- `.lightbox-close` (botón cerrar lightbox)
+- `.password-buttons img` (botón back del password)
+- `.section-title` (títulos de email/phone en about)
+
+En el lightbox, las flechas de navegación usan `opacity: 0.85` como base (en vez de `1`). Cuando están en el boundary (primera/última imagen), bajan a `0.3`. El JS se actualizó para limpiar el inline style cuando no está en boundary, dejando que el CSS aplique el `0.85` por defecto. El hover usa `!important` para llegar a `1` incluso cuando el JS pone `0.3`.
+
+**3. Family albums: de texto a imágenes de título**
+
+Los álbumes del family archive se renderizaban como `<button>` con `textContent` (texto plano), rompiendo la filosofía de "todo son imágenes, no texto". Se verificó que cada álbum tiene un `title.webp` en su carpeta.
+
+Se actualizó `home.js` para crear `<img>` con `src="data/familyArchive/ashlee/{album}/title.webp"` en lugar de botones de texto. Se actualizó el CSS reemplazando los estilos de `.album-date` por estilos de `.album-links img` con la misma opacity/hover que el resto.
+
+**4. Noise canvas estático y compartido**
+
+El noise se redibujaba cada frame (~60fps) con `requestAnimationFrame`, consumiendo CPU innecesariamente para un efecto que visualmente es casi idéntico si es estático.
+
+Se creó `noise.js` como archivo compartido con una implementación que dibuja el noise una sola vez (y re-dibuja solo en resize). Se eliminó la función `setupNoiseCanvas()` duplicada de `home.js`, `project.js` y `about.js`. Se añadió `<script src="noise.js">` a las tres páginas HTML.
+
+**5. Título dinámico en project.html**
+
+Se añadió `document.title = currentProject.title` para que la pestaña del navegador muestre el nombre del proyecto en lugar del genérico "Project".
+
+#### Archivos nuevos
+
+- `noise.js` — Código compartido de noise canvas (estático, render único)
+
+#### Archivos modificados
+
+- `style.css` — z-index del noise canvas, opacity 0.85 en todos los botones, estilos de album-links con imágenes, z-index del gallery
+- `home.js` — Family albums ahora crean `<img>` en vez de `<button>`, eliminado `setupNoiseCanvas()`
+- `project.js` — Lightbox buttons usan CSS opacity por defecto, título dinámico, eliminado `setupNoiseCanvas()`
+- `about.js` — Eliminado `setupNoiseCanvas()`
+- `index.html` — Añadido `<script src="noise.js">`
+- `project.html` — Añadido `<script src="noise.js">`
+- `about.html` — Añadido `<script src="noise.js">`
+
+
+---
+
+## 27 de enero de 2026 (continuación)
+
+### Fix definitivo: Noise como capa de background del body
+
+#### Sinopsis
+
+El approach anterior de usar un `<canvas>` con `position: fixed` y `mix-blend-mode: overlay` no funcionaba correctamente. El noise era invisible porque `mix-blend-mode` en un elemento fixed con z-index bajo no se mezcla con el `background-image` del body (están en diferentes contextos de stacking). Se cambió a un approach completamente diferente: generar el noise como textura PNG y aplicarla como capa adicional del `background-image` del body.
+
+#### Problema raíz
+
+El canvas de ruido con `position: fixed` y `z-index: 1` no se blendea visualmente con el `background-image` CSS del body porque:
+- El background CSS del body se pinta en la capa 0 del rendering
+- El canvas fixed se renderiza como un elemento posicionado independiente
+- `mix-blend-mode: overlay` se aplica contra lo que hay "debajo" en el stacking context, que en este caso era transparente/nada, no el fondo de la cuadrícula
+- Resultado: noise invisible
+
+#### Solución: noise como background-image layer
+
+En vez de un canvas superpuesto, se genera un tile de noise de 256x256 pixels usando un canvas offscreen (no insertado en el DOM), se exporta como data URL PNG, y se aplica como la primera capa del `background-image` del body. Así:
+
+- El noise forma parte del fondo junto con la cuadrícula
+- Se repite automáticamente (tile) cubriendo toda la ventana
+- Nunca afecta a las imágenes ni al contenido
+- Es inherentemente estático (se genera una vez al cargar)
+- No necesita z-index ni mix-blend-mode
+- La intensidad se controla con el alpha del noise (40/255 ≈ 16%)
+
+```javascript
+// Genera tile de noise 256x256
+const canvas = document.createElement('canvas');
+canvas.width = 256;
+canvas.height = 256;
+// ... dibuja pixels con alpha 40 ...
+const noiseUrl = canvas.toDataURL('image/png');
+
+// Lo prepende como primera capa del background del body
+document.body.style.backgroundImage =
+    `url(${noiseUrl}), ` +
+    'linear-gradient(...grid lines...)';
+```
+
+#### Limpieza
+
+- Eliminado `<canvas id="noise-canvas">` de las tres páginas HTML
+- Eliminado CSS de `#noise-canvas` (position, z-index, opacity, blend-mode)
+- Eliminado `position: relative; z-index: 2` del `#gallery` (ya no necesario)
+- `noise.js` reescrito completamente: ya no manipula un canvas DOM sino que genera una textura offscreen
+
+#### Archivos modificados
+
+- `noise.js` — Reescrito: genera noise como background-image layer del body
+- `style.css` — Eliminado CSS de `#noise-canvas`, eliminado z-index de `#gallery`
+- `index.html` — Eliminado `<canvas id="noise-canvas">`
+- `project.html` — Eliminado `<canvas id="noise-canvas">`
+- `about.html` — Eliminado `<canvas id="noise-canvas">`
