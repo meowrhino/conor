@@ -1,7 +1,20 @@
-// Global state
+/**
+ * home.js — Main menu logic for index.html
+ *
+ * Loads data.json, populates menu buttons for projects/commissions/albums,
+ * handles password-protected projects, and manages screen navigation.
+ *
+ * Navigation flow:
+ *   Main menu → Commissions screen | Family archive screen | Password screen
+ *   Any selection → project.html?type=...&slug=...
+ */
+
 let appData = null;
 
-// Initialize app
+// ---------------------------------------------------------------------------
+// Initialization
+// ---------------------------------------------------------------------------
+
 async function init() {
     const response = await fetch('data/data.json');
     appData = await response.json();
@@ -12,6 +25,13 @@ async function init() {
     setHomeState(true);
 }
 
+// ---------------------------------------------------------------------------
+// Menu population — builds buttons dynamically from data.json
+// ---------------------------------------------------------------------------
+
+/**
+ * Try to load title.webp from the project folder; fall back to assets/titles/.
+ */
 function setTitleImage(img, slug, fallbackSrc) {
     const preferredSrc = `data/projects/${slug}/title.webp`;
     img.src = preferredSrc;
@@ -21,13 +41,15 @@ function setTitleImage(img, slug, fallbackSrc) {
     };
 }
 
+/**
+ * Toggle body.is-home class — used by CSS to hide the home button on home.
+ */
 function setHomeState(isHome) {
     document.body.classList.toggle('is-home', isHome);
 }
 
-// Populate menu with buttons
 function populateMenu() {
-    // Projects
+    // Projects — title images as buttons
     const projectsContainer = document.getElementById('projects-buttons');
     appData.projects.forEach(project => {
         const img = document.createElement('img');
@@ -38,7 +60,7 @@ function populateMenu() {
         projectsContainer.appendChild(img);
     });
 
-    // Commissions
+    // Commissions — first image as thumbnail
     const commissionsContainer = document.getElementById('commissions-buttons');
     appData.commissions.forEach(commission => {
         const img = document.createElement('img');
@@ -49,7 +71,7 @@ function populateMenu() {
         commissionsContainer.appendChild(img);
     });
 
-    // Family Archive Albums
+    // Family archive albums — handwritten title images
     const albumsContainer = document.getElementById('family-archive-albums');
     const archive = appData.familyArchive[0];
     archive.albums.forEach(album => {
@@ -62,7 +84,13 @@ function populateMenu() {
     });
 }
 
-// Handle project click
+// ---------------------------------------------------------------------------
+// Password protection
+// ---------------------------------------------------------------------------
+
+/** Guard flag to prevent double-submit on fast Enter key repeats */
+let passwordChecking = false;
+
 function handleProjectClick(project) {
     if (project.password) {
         showPasswordScreen(project);
@@ -70,9 +98,6 @@ function handleProjectClick(project) {
         goToProject('project', project.slug);
     }
 }
-
-// Show password screen
-let passwordChecking = false;
 
 function showPasswordScreen(project) {
     document.getElementById('main-menu').classList.add('hidden');
@@ -110,33 +135,39 @@ function showPasswordScreen(project) {
     };
 }
 
-// Navigate to project page
+// ---------------------------------------------------------------------------
+// Navigation
+// ---------------------------------------------------------------------------
+
 function goToProject(type, slug) {
     window.location.href = `project.html?type=${type}&slug=${slug}`;
 }
 
-// Setup event listeners
 function setupEventListeners() {
     document.getElementById('about-btn').addEventListener('click', () => {
         window.location.href = 'about.html';
     });
 
+    // Show commissions sub-screen
     document.getElementById('commissions-link').addEventListener('click', () => {
         document.getElementById('main-menu').classList.add('hidden');
         document.getElementById('commissions-screen').classList.remove('hidden');
         setHomeState(false);
     });
 
+    // Show family archive sub-screen
     document.getElementById('family-archive-link').addEventListener('click', () => {
         document.getElementById('main-menu').classList.add('hidden');
         document.getElementById('family-archive-screen').classList.remove('hidden');
         setHomeState(false);
     });
 
+    // Home buttons — return to main menu
     document.querySelectorAll('.btn-home').forEach(btn => {
         btn.addEventListener('click', goHome);
     });
 
+    // Password back button
     const backBtn = document.querySelector('.btn-back');
     if (backBtn) {
         backBtn.addEventListener('click', () => {
@@ -147,7 +178,6 @@ function setupEventListeners() {
     }
 }
 
-// Go back to home
 function goHome() {
     document.getElementById('commissions-screen').classList.add('hidden');
     document.getElementById('family-archive-screen').classList.add('hidden');
@@ -156,5 +186,5 @@ function goHome() {
     setHomeState(true);
 }
 
-// Initialize on load
+// ---------------------------------------------------------------------------
 window.addEventListener('DOMContentLoaded', init);

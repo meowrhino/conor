@@ -1,9 +1,10 @@
 /**
- * Mobile gate demo
- * - Shows a full-screen overlay only on mobile-ish environments.
- * - The overlay content exists in HTML, and we toggle visibility by removing/adding the `.hidden` class.
+ * gate.js — Mobile device gate
+ *
+ * Blocks access on mobile/touch devices by showing a full-screen overlay.
+ * Detection uses viewport width (<768px) and pointer type (coarse = touch).
+ * The overlay HTML lives in each page; this script just toggles visibility.
  */
-
 (function () {
   const overlay = document.getElementById("device-check-overlay");
   const msg = document.getElementById("device-check-message");
@@ -12,8 +13,6 @@
 
   if (!overlay || !msg || !why || !expl) return;
 
-  // Practical "mobile-ish" detection:
-  // - small viewport OR coarse pointer (touch-first devices)
   const isMobileish =
     window.matchMedia("(max-width: 768px)").matches ||
     window.matchMedia("(pointer: coarse)").matches;
@@ -23,16 +22,11 @@
   msg.textContent =
     "oh no, you are using a phone :( you need a larger device, like a laptop with chrome in order to enter this page";
 
-  // Show overlay
   overlay.classList.remove("hidden");
-
-  // Enable "Why?"
   why.classList.remove("hidden");
-  requestAnimationFrame(() => why.classList.add("show"));
 
   why.addEventListener("click", (e) => {
     e.preventDefault();
     expl.classList.toggle("hidden");
-    expl.classList.toggle("show");
   });
 })();

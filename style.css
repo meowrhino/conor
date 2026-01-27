@@ -1,7 +1,33 @@
+/* ==========================================================================
+   style.css — Global styles for Conor Ashlee-Purle portfolio
+
+   Architecture:
+   - Multi-page site: index.html (home), project.html (gallery), about.html
+   - All interactive elements use .interactive class (opacity 0.85 → 1 on hover)
+   - Gallery images have their own opacity rules (0.85 → 1, no scale)
+   - Background: CSS grid pattern + noise overlay (injected by noise.js)
+
+   Z-index layers:
+     10     .centered-container (main menu)
+     50     .section-screen (commissions, family archive overlays)
+     99     .info-panel (project info)
+    100     .top-left-actions (home/about buttons)
+    100     .preloader
+   1000     .lightbox
+   1001     .lightbox-nav, .lightbox-close
+  10000     #device-check-overlay (mobile gate — topmost)
+   ========================================================================== */
+
+/* Reset */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+/* Prevent overscroll bounce (white flash at scroll edges on macOS/Chrome) */
+html {
+    overscroll-behavior: none;
 }
 
 body {
@@ -10,7 +36,7 @@ body {
     position: relative;
     min-height: 100vh;
 
-    /* Paper CSS pattern background */
+    /* Grid pattern background — noise.js prepends a noise tile layer at runtime */
     background-color: #e5e5f7;
     background-image: linear-gradient(#444cf7 2px, transparent 2px),
                       linear-gradient(90deg, #444cf7 2px, transparent 2px),
@@ -20,7 +46,8 @@ body {
     background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
 }
 
-/* Mobile Gate */
+/* ---------- Mobile Gate ---------- */
+
 #device-check-overlay {
     position: fixed;
     top: 0;
@@ -63,12 +90,17 @@ body {
     border-radius: 8px;
 }
 
-/* Utility classes */
+/* ---------- Utility classes ---------- */
+
 .hidden {
     display: none !important;
 }
 
-/* Interactive elements — shared hover behavior */
+/*
+ * .interactive — Shared hover behavior for all clickable elements.
+ * Base: opacity 0.85, hover: opacity 1 + slight scale.
+ * Modifier: .interactive--lg gives a larger scale (1.1) for utility buttons.
+ */
 .interactive {
     opacity: 0.85;
     cursor: pointer;
@@ -80,12 +112,12 @@ body {
     transform: scale(1.05);
 }
 
-/* Larger scale for smaller utility buttons */
 .interactive--lg:hover {
     transform: scale(1.1);
 }
 
-/* Top-left actions */
+/* ---------- Top-left actions (home + about buttons) ---------- */
+
 .top-left-actions {
     position: fixed;
     top: 2rem;
@@ -97,6 +129,7 @@ body {
     z-index: 100;
 }
 
+/* Hide the home button on the home page itself */
 body.is-home .top-left-actions .btn-home {
     display: none;
 }
@@ -106,7 +139,8 @@ body.is-home .top-left-actions .btn-home {
     height: auto;
 }
 
-/* Centered container for main menu */
+/* ---------- Main menu (centered) ---------- */
+
 .centered-container {
     position: fixed;
     top: 50%;
@@ -140,6 +174,7 @@ body.is-home .top-left-actions .btn-home {
     max-width: 900px;
 }
 
+/* Projects stack vertically in the main menu */
 #main-menu .menu-buttons {
     flex-direction: column;
     flex-wrap: nowrap;
@@ -151,11 +186,13 @@ body.is-home .top-left-actions .btn-home {
     height: auto;
 }
 
+/* Commission thumbnails are larger */
 #commissions-screen .menu-buttons img {
     max-height: 170px;
 }
 
-/* Section screens */
+/* ---------- Section screens (commissions, family archive) ---------- */
+
 .section-screen {
     position: fixed;
     top: 0;
@@ -165,7 +202,8 @@ body.is-home .top-left-actions .btn-home {
     z-index: 50;
 }
 
-/* Album links */
+/* ---------- Album links (family archive) ---------- */
+
 .album-links {
     display: flex;
     flex-wrap: wrap;
@@ -180,7 +218,8 @@ body.is-home .top-left-actions .btn-home {
     height: auto;
 }
 
-/* Password Screen */
+/* ---------- Password screen ---------- */
+
 #password-screen {
     position: fixed;
     top: 0;
@@ -224,7 +263,8 @@ body.is-home .top-left-actions .btn-home {
     max-width: 150px;
 }
 
-/* Preloader */
+/* ---------- Preloader (progress bar while images load) ---------- */
+
 .preloader {
     position: fixed;
     top: 0;
@@ -246,7 +286,8 @@ body.is-home .top-left-actions .btn-home {
     max-width: 400px;
 }
 
-/* Gallery */
+/* ---------- Gallery ---------- */
+
 #gallery {
     width: 100%;
     min-height: 100vh;
@@ -254,7 +295,7 @@ body.is-home .top-left-actions .btn-home {
     padding-bottom: 4rem;
 }
 
-/* Masonry layout */
+/* Masonry layout — columns created dynamically by project.js */
 .gallery-grid {
     display: flex;
     gap: 1rem;
@@ -275,11 +316,12 @@ body.is-home .top-left-actions .btn-home {
     cursor: pointer;
 }
 
+/* Gallery images: same 0.85 opacity as everything, hover to 1, no scale */
 .gallery-item img {
     width: 100%;
     height: auto;
     display: block;
-    opacity: 0.7;
+    opacity: 0.85;
     transition: opacity 0.3s ease;
 }
 
@@ -287,7 +329,7 @@ body.is-home .top-left-actions .btn-home {
     opacity: 1;
 }
 
-/* Gallery menu (after grid) */
+/* Gallery menu — positioned after the grid, not fixed */
 .gallery-menu {
     display: flex;
     gap: 1.5rem;
@@ -300,7 +342,8 @@ body.is-home .top-left-actions .btn-home {
     max-width: 80px;
 }
 
-/* Info panel */
+/* ---------- Info panel (project metadata) ---------- */
+
 .info-panel {
     position: fixed;
     bottom: 8rem;
@@ -328,19 +371,20 @@ body.is-home .top-left-actions .btn-home {
     margin-bottom: 0.5rem;
 }
 
-/* Home button (after gallery) */
+/* ---------- Home button (after gallery grid) ---------- */
+
 .btn-home-container {
     display: flex;
     justify-content: flex-start;
     margin-top: 2rem;
-
 }
 
 .btn-home {
     max-width: 100px;
 }
 
-/* Lightbox */
+/* ---------- Lightbox (full-screen image viewer) ---------- */
+
 .lightbox {
     position: fixed;
     top: 0;
@@ -380,7 +424,7 @@ body.is-home .top-left-actions .btn-home {
     pointer-events: auto;
 }
 
-/* Override inline opacity from JS boundary checks */
+/* Override inline opacity set by JS at first/last image boundaries */
 .lightbox-btn:hover {
     opacity: 1 !important;
 }
@@ -393,7 +437,8 @@ body.is-home .top-left-actions .btn-home {
     max-width: 80px;
 }
 
-/* About Screen */
+/* ---------- About screen ---------- */
+
 #about-screen {
     position: fixed;
     top: 0;
