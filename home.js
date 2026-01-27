@@ -9,15 +9,20 @@ async function init() {
     setupNoiseCanvas();
     populateMenu();
     setupEventListeners();
+    setHomeState(true);
 }
 
 function setTitleImage(img, slug, fallbackSrc) {
-    const preferredSrc = `data/assets/titles/${slug}.webp`;
+    const preferredSrc = `data/projects/${slug}/title.webp`;
     img.src = preferredSrc;
     img.onerror = () => {
         img.onerror = null;
         img.src = fallbackSrc;
     };
+}
+
+function setHomeState(isHome) {
+    document.body.classList.toggle('is-home', isHome);
 }
 
 // Setup static noise overlay
@@ -62,7 +67,7 @@ function populateMenu() {
     const projectsContainer = document.getElementById('projects-buttons');
     appData.projects.forEach(project => {
         const img = document.createElement('img');
-        setTitleImage(img, project.slug, `data/projects/${project.slug}/title.webp`);
+        setTitleImage(img, project.slug, `data/assets/titles/${project.slug}.webp`);
         img.alt = project.title;
         img.addEventListener('click', () => handleProjectClick(project));
         projectsContainer.appendChild(img);
@@ -104,6 +109,7 @@ function handleProjectClick(project) {
 function showPasswordScreen(project) {
     document.getElementById('main-menu').classList.add('hidden');
     document.getElementById('password-screen').classList.remove('hidden');
+    setHomeState(false);
     
     const input = document.getElementById('password-input');
     input.value = '';
@@ -151,12 +157,14 @@ function setupEventListeners() {
     document.getElementById('commissions-link').addEventListener('click', () => {
         document.getElementById('main-menu').classList.add('hidden');
         document.getElementById('commissions-screen').classList.remove('hidden');
+        setHomeState(false);
     });
     
     // Family Archive link
     document.getElementById('family-archive-link').addEventListener('click', () => {
         document.getElementById('main-menu').classList.add('hidden');
         document.getElementById('family-archive-screen').classList.remove('hidden');
+        setHomeState(false);
     });
     
     // Home buttons
@@ -170,6 +178,7 @@ function setupEventListeners() {
         backBtn.addEventListener('click', () => {
             document.getElementById('password-screen').classList.add('hidden');
             document.getElementById('main-menu').classList.remove('hidden');
+            setHomeState(true);
         });
     }
 }
@@ -180,6 +189,7 @@ function goHome() {
     document.getElementById('family-archive-screen').classList.add('hidden');
     document.getElementById('password-screen').classList.add('hidden');
     document.getElementById('main-menu').classList.remove('hidden');
+    setHomeState(true);
 }
 
 // Initialize on load

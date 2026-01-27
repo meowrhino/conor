@@ -12,7 +12,6 @@ body {
     
     /* Paper CSS pattern background */
     background-color: #e5e5f7;
-    opacity: 0.8;
     background-image: linear-gradient(#444cf7 2px, transparent 2px), 
                       linear-gradient(90deg, #444cf7 2px, transparent 2px), 
                       linear-gradient(#444cf7 1px, transparent 1px), 
@@ -82,23 +81,34 @@ body {
     display: none !important;
 }
 
-/* Top left buttons (home and about) */
-.top-left-btn {
-    position: fixed;
-    top: 2rem;
-    left: 2rem;
+/* Top-left actions */
+.about-btn {
     cursor: pointer;
-    z-index: 100;
     transition: transform 0.2s;
 }
 
-.top-left-btn:hover {
+.about-btn:hover {
     transform: scale(1.05);
 }
 
-.top-left-btn img {
+.about-btn img {
     max-width: 180px;
     height: auto;
+}
+
+.top-left-actions {
+    position: fixed;
+    top: 2rem;
+    left: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+    z-index: 100;
+}
+
+body.is-home .top-left-actions .btn-home {
+    display: none;
 }
 
 /* Centered container for main menu */
@@ -121,12 +131,8 @@ body {
     gap: 1.5rem;
 }
 
-.menu-section.main-title .menu-title img {
-    max-width: 500px;
-}
-
 .menu-title img {
-    max-width: 300px;
+    max-height: 70px;
     height: auto;
     display: block;
 }
@@ -155,10 +161,14 @@ body {
 }
 
 .menu-buttons img {
-    max-width: 200px;
+    max-height: 50px;
     height: auto;
     cursor: pointer;
     transition: transform 0.2s;
+}
+
+#commissions-screen .menu-buttons img {
+    max-height: 170px;
 }
 
 .menu-buttons img:hover {
@@ -300,11 +310,9 @@ body {
 .gallery-item {
     position: relative;
     cursor: pointer;
-    transition: opacity 0.3s ease;
-    opacity: 0.7;
 }
 
-.gallery-item:hover {
+.gallery-item:hover img {
     opacity: 1;
 }
 
@@ -312,6 +320,8 @@ body {
     width: 100%;
     height: auto;
     display: block;
+    transition: opacity 0.3s ease;
+    opacity: 0.7;
 }
 
 /* Gallery menu (after grid, not fixed) */
@@ -393,7 +403,7 @@ body {
     z-index: 1000;
 }
 
-.lightbox img {
+#lightbox-image {
     max-width: 90%;
     max-height: 90%;
     object-fit: contain;
@@ -415,7 +425,7 @@ body {
 }
 
 .lightbox-btn {
-    max-width: 30px;
+    max-width: 100px;
     cursor: pointer;
     transition: transform 0.2s, opacity 0.2s;
     pointer-events: auto;
@@ -481,21 +491,22 @@ body {
     align-items: center;
 }
 
-.section-title {
-    max-width: 200px;
-}
-
-.section-content {
-    font-size: 1.2rem;
-    color: #444cf7;
-    font-weight: bold;
-}
-
-.section-content a {
-    color: #444cf7;
+.about-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
     text-decoration: none;
 }
 
-.section-content a:hover {
-    text-decoration: underline;
+.section-title {
+    max-width: 200px;
+    transition: transform 0.2s;
+}
+
+.about-action:hover .section-title {
+    transform: scale(1.05);
 }
