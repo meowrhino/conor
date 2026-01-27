@@ -9,12 +9,12 @@ body {
     overflow-x: hidden;
     position: relative;
     min-height: 100vh;
-    
+
     /* Paper CSS pattern background */
     background-color: #e5e5f7;
-    background-image: linear-gradient(#444cf7 2px, transparent 2px), 
-                      linear-gradient(90deg, #444cf7 2px, transparent 2px), 
-                      linear-gradient(#444cf7 1px, transparent 1px), 
+    background-image: linear-gradient(#444cf7 2px, transparent 2px),
+                      linear-gradient(90deg, #444cf7 2px, transparent 2px),
+                      linear-gradient(#444cf7 1px, transparent 1px),
                       linear-gradient(90deg, #444cf7 1px, #e5e5f7 1px);
     background-size: 50px 50px, 50px 50px, 10px 10px, 10px 10px;
     background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
@@ -68,27 +68,24 @@ body {
     display: none !important;
 }
 
-/* Top-left actions */
-.about-btn {
+/* Interactive elements — shared hover behavior */
+.interactive {
+    opacity: 0.85;
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: transform 0.2s, opacity 0.3s ease;
 }
 
-.about-btn:hover {
+.interactive:hover {
+    opacity: 1;
     transform: scale(1.05);
 }
 
-.about-btn img {
-    max-width: 180px;
-    height: auto;
-    opacity: 0.85;
-    transition: opacity 0.3s ease, transform 0.2s;
+/* Larger scale for smaller utility buttons */
+.interactive--lg:hover {
+    transform: scale(1.1);
 }
 
-.about-btn:hover img {
-    opacity: 1;
-}
-
+/* Top-left actions */
 .top-left-actions {
     position: fixed;
     top: 2rem;
@@ -102,6 +99,11 @@ body {
 
 body.is-home .top-left-actions .btn-home {
     display: none;
+}
+
+.about-btn img {
+    max-width: 180px;
+    height: auto;
 }
 
 /* Centered container for main menu */
@@ -128,18 +130,6 @@ body.is-home .top-left-actions .btn-home {
     max-height: 70px;
     height: auto;
     display: block;
-    opacity: 0.85;
-    transition: opacity 0.3s ease, transform 0.2s;
-}
-
-.menu-title.clickable {
-    cursor: pointer;
-    transition: transform 0.2s;
-}
-
-.menu-title.clickable:hover img {
-    transform: scale(1.05);
-    opacity: 1;
 }
 
 .menu-buttons {
@@ -159,18 +149,10 @@ body.is-home .top-left-actions .btn-home {
 .menu-buttons img {
     max-height: 50px;
     height: auto;
-    cursor: pointer;
-    opacity: 0.85;
-    transition: transform 0.2s, opacity 0.3s ease;
 }
 
 #commissions-screen .menu-buttons img {
     max-height: 170px;
-}
-
-.menu-buttons img:hover {
-    transform: scale(1.05);
-    opacity: 1;
 }
 
 /* Section screens */
@@ -196,14 +178,6 @@ body.is-home .top-left-actions .btn-home {
 .album-links img {
     max-height: 50px;
     height: auto;
-    cursor: pointer;
-    opacity: 0.85;
-    transition: transform 0.2s, opacity 0.3s ease;
-}
-
-.album-links img:hover {
-    transform: scale(1.05);
-    opacity: 1;
 }
 
 /* Password Screen */
@@ -248,14 +222,6 @@ body.is-home .top-left-actions .btn-home {
 
 .password-buttons img {
     max-width: 150px;
-    cursor: pointer;
-    opacity: 0.85;
-    transition: transform 0.2s, opacity 0.3s ease;
-}
-
-.password-buttons img:hover {
-    transform: scale(1.05);
-    opacity: 1;
 }
 
 /* Preloader */
@@ -288,7 +254,7 @@ body.is-home .top-left-actions .btn-home {
     padding-bottom: 4rem;
 }
 
-/* Masonry grid */
+/* Masonry layout */
 .gallery-grid {
     display: flex;
     gap: 1rem;
@@ -309,19 +275,19 @@ body.is-home .top-left-actions .btn-home {
     cursor: pointer;
 }
 
-.gallery-item:hover img {
-    opacity: 1;
-}
-
 .gallery-item img {
     width: 100%;
     height: auto;
     display: block;
-    transition: opacity 0.3s ease;
     opacity: 0.7;
+    transition: opacity 0.3s ease;
 }
 
-/* Gallery menu (after grid, not fixed) */
+.gallery-item:hover img {
+    opacity: 1;
+}
+
+/* Gallery menu (after grid) */
 .gallery-menu {
     display: flex;
     gap: 1.5rem;
@@ -332,14 +298,6 @@ body.is-home .top-left-actions .btn-home {
 
 .gallery-menu img {
     max-width: 80px;
-    cursor: pointer;
-    opacity: 0.85;
-    transition: transform 0.2s, opacity 0.3s ease;
-}
-
-.gallery-menu img:hover {
-    transform: scale(1.1);
-    opacity: 1;
 }
 
 /* Info panel */
@@ -375,19 +333,11 @@ body.is-home .top-left-actions .btn-home {
     display: flex;
     justify-content: flex-start;
     margin-top: 2rem;
-    padding: 0 2rem;
+
 }
 
 .btn-home {
     max-width: 100px;
-    cursor: pointer;
-    opacity: 0.85;
-    transition: transform 0.2s, opacity 0.3s ease;
-}
-
-.btn-home:hover {
-    transform: scale(1.1);
-    opacity: 1;
 }
 
 /* Lightbox */
@@ -427,14 +377,11 @@ body.is-home .top-left-actions .btn-home {
 
 .lightbox-btn {
     max-width: 100px;
-    cursor: pointer;
-    transition: transform 0.2s, opacity 0.3s ease;
     pointer-events: auto;
-    opacity: 0.85;
 }
 
+/* Override inline opacity from JS boundary checks */
 .lightbox-btn:hover {
-    transform: scale(1.1);
     opacity: 1 !important;
 }
 
@@ -442,16 +389,8 @@ body.is-home .top-left-actions .btn-home {
     position: fixed;
     top: 2rem;
     left: 2rem;
-    cursor: pointer;
     z-index: 1001;
     max-width: 80px;
-    opacity: 0.85;
-    transition: transform 0.2s, opacity 0.3s ease;
-}
-
-.lightbox-close:hover {
-    transform: scale(1.1);
-    opacity: 1;
 }
 
 /* About Screen */
@@ -503,17 +442,9 @@ body.is-home .top-left-actions .btn-home {
     padding: 0;
     border: none;
     background: none;
-    cursor: pointer;
     text-decoration: none;
 }
 
 .section-title {
     max-width: 200px;
-    opacity: 0.85;
-    transition: transform 0.2s, opacity 0.3s ease;
-}
-
-.about-action:hover .section-title {
-    transform: scale(1.05);
-    opacity: 1;
 }

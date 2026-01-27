@@ -5,7 +5,7 @@ let appData = null;
 async function init() {
     const response = await fetch('data/data.json');
     appData = await response.json();
-    
+
     setupNoiseCanvas();
     populateMenu();
     setupEventListeners();
@@ -31,27 +31,30 @@ function populateMenu() {
     const projectsContainer = document.getElementById('projects-buttons');
     appData.projects.forEach(project => {
         const img = document.createElement('img');
+        img.className = 'interactive';
         setTitleImage(img, project.slug, `data/assets/titles/${project.slug}.webp`);
         img.alt = project.title;
         img.addEventListener('click', () => handleProjectClick(project));
         projectsContainer.appendChild(img);
     });
-    
+
     // Commissions
     const commissionsContainer = document.getElementById('commissions-buttons');
     appData.commissions.forEach(commission => {
         const img = document.createElement('img');
+        img.className = 'interactive';
         img.src = `data/commission/${commission.slug}/1.webp`;
         img.alt = commission.title;
-        img.addEventListener('click', () => goToProject('commission', commission.slug, commission.password));
+        img.addEventListener('click', () => goToProject('commission', commission.slug));
         commissionsContainer.appendChild(img);
     });
-    
+
     // Family Archive Albums
     const albumsContainer = document.getElementById('family-archive-albums');
     const archive = appData.familyArchive[0];
     archive.albums.forEach(album => {
         const img = document.createElement('img');
+        img.className = 'interactive';
         img.src = `data/familyArchive/${archive.slug}/${album.slug}/title.webp`;
         img.alt = album.title;
         img.addEventListener('click', () => goToProject('album', `${archive.slug}/${album.slug}`));
@@ -69,73 +72,71 @@ function handleProjectClick(project) {
 }
 
 // Show password screen
+let passwordChecking = false;
+
 function showPasswordScreen(project) {
     document.getElementById('main-menu').classList.add('hidden');
     document.getElementById('password-screen').classList.remove('hidden');
     setHomeState(false);
-    
+    passwordChecking = false;
+
     const input = document.getElementById('password-input');
+    const feedback = document.getElementById('password-feedback-img');
     input.value = '';
+    feedback.classList.add('hidden');
     input.focus();
-    
+
     const checkPassword = () => {
-        const feedback = document.getElementById('password-feedback-img');
-        
+        if (passwordChecking) return;
+        passwordChecking = true;
+
         if (input.value === project.password) {
             feedback.src = 'data/assets/password/correct.webp';
             feedback.classList.remove('hidden');
-            
-            setTimeout(() => {
-                goToProject('project', project.slug);
-            }, 1000);
+            setTimeout(() => goToProject('project', project.slug), 1000);
         } else {
             feedback.src = 'data/assets/password/wrong.webp';
             feedback.classList.remove('hidden');
-            
             setTimeout(() => {
                 feedback.classList.add('hidden');
                 input.value = '';
+                passwordChecking = false;
             }, 1500);
         }
     };
-    
-    input.onkeypress = (e) => {
+
+    input.onkeydown = (e) => {
         if (e.key === 'Enter') checkPassword();
     };
 }
 
 // Navigate to project page
-function goToProject(type, slug, password) {
-    window.location.href = `project.html?type=${type}&slug=${slug}${password ? '&password=' + password : ''}`;
+function goToProject(type, slug) {
+    window.location.href = `project.html?type=${type}&slug=${slug}`;
 }
 
 // Setup event listeners
 function setupEventListeners() {
-    // About button
     document.getElementById('about-btn').addEventListener('click', () => {
         window.location.href = 'about.html';
     });
-    
-    // Commissions link
+
     document.getElementById('commissions-link').addEventListener('click', () => {
         document.getElementById('main-menu').classList.add('hidden');
         document.getElementById('commissions-screen').classList.remove('hidden');
         setHomeState(false);
     });
-    
-    // Family Archive link
+
     document.getElementById('family-archive-link').addEventListener('click', () => {
         document.getElementById('main-menu').classList.add('hidden');
         document.getElementById('family-archive-screen').classList.remove('hidden');
         setHomeState(false);
     });
-    
-    // Home buttons
+
     document.querySelectorAll('.btn-home').forEach(btn => {
         btn.addEventListener('click', goHome);
     });
-    
-    // Password back button
+
     const backBtn = document.querySelector('.btn-back');
     if (backBtn) {
         backBtn.addEventListener('click', () => {

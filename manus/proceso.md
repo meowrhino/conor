@@ -761,3 +761,114 @@ document.body.style.backgroundImage =
 - `index.html` — Eliminado `<canvas id="noise-canvas">`
 - `project.html` — Eliminado `<canvas id="noise-canvas">`
 - `about.html` — Eliminado `<canvas id="noise-canvas">`
+
+
+---
+
+## 27 de enero de 2026 (continuación)
+
+### Refactorización de código: CSS utility classes, bugs y código muerto
+
+#### Sinopsis
+
+Refactorización completa del código para eliminar duplicación CSS, corregir bugs de seguridad y UX, y eliminar código muerto. Se extrajo una clase utilitaria `.interactive` para unificar todos los patrones de hover repetidos.
+
+#### CSS: Clases utilitarias `.interactive` / `.interactive--lg`
+
+Se identificaron más de 10 bloques CSS duplicados que aplicaban el mismo patrón de opacity + hover + transition a distintos elementos (botones, títulos, álbumes, flechas del lightbox, etc.). Se unificaron en dos clases:
+
+- `.interactive`: `opacity: 0.85`, `cursor: pointer`, transición, hover → `opacity: 1` + `scale(1.05)`
+- `.interactive--lg`: hover → `scale(1.1)` (para botones de utilidad más pequeños)
+
+Las imágenes de galería mantienen sus reglas separadas: `opacity: 0.7` → `1` en hover, sin scale.
+
+Se eliminaron ~10 bloques CSS redundantes: `.about-btn img:hover`, `.menu-title.clickable`, `.album-links img` hover rules, `.btn-home:hover`, `.gallery-menu img:hover`, `.lightbox-btn` hover, `.lightbox-close:hover`, `.password-buttons img` hover, `.section-title:hover`, etc.
+
+#### Bugs corregidos
+
+1. **innerHTML XSS** (`project.js:setupInfoPanel`): Se usaban template literals con `innerHTML` para renderizar datos del proyecto. Reemplazado con métodos DOM seguros (`createElement`, `textContent`, `createTextNode`).
+
+2. **Password race condition** (`home.js`): Un doble Enter podía disparar la navegación dos veces. Añadido flag `passwordChecking` que se activa al iniciar la comprobación y se resetea tras el feedback.
+
+3. **`keypress` deprecado** (`home.js`): Cambiado `onkeypress` → `onkeydown` para el input de contraseña.
+
+4. **Password en URL**: `goToProject()` ya no acepta password como parámetro de URL.
+
+5. **Doble carga de imágenes** (`project.js`): `preloadImages()` precargaba todas las imágenes, pero luego `renderMasonryGallery()` las creaba con `loading="lazy"` — contradictorio. Eliminado `loading="lazy"`.
+
+6. **Lightbox navigation simplificada**: Reemplazada la lógica condicional de boundaries por módulo aritmético: `(currentImageIndex + direction + images.length) % images.length`.
+
+#### Código muerto eliminado
+
+- Clases CSS `.menu-link` y `.clickable` en HTML (no tenían reglas CSS asociadas)
+- Password URL parameter en `goToProject()`
+- Variable `error` no usada en catch de `loadImageManifest()`
+- Reset de feedback image al abrir password screen (previene estado stale)
+
+#### HTML actualizado
+
+Se añadieron las clases `interactive` / `interactive--lg` a todos los elementos estáticos en las tres páginas HTML:
+- `index.html`: about-btn, btn-home, menu-title elements
+- `project.html`: btn-home, btn-info, lightbox arrows, lightbox close
+- `about.html`: btn-home, about-action links
+
+#### Archivos modificados
+
+- `style.css` — Reescrito: extraídas clases utilitarias, eliminados bloques duplicados
+- `home.js` — Race condition fix, keydown, password cleanup, interactive classes en DOM dinámico
+- `project.js` — DOM methods, no lazy loading, modulo navigation, null checks
+- `index.html` — Interactive classes, eliminadas clases muertas
+- `project.html` — Interactive classes
+- `about.html` — Interactive classes
+
+
+---
+
+### Reorganización de álbumes: imágenes numeradas y eliminación de albums.json
+
+#### Sinopsis
+
+Renombrado de las 877 imágenes del family archive de nombres de timestamp (`img20240919_11102949.webp`) a números secuenciales (`1.webp`, `2.webp`, ...). Añadido `imageCount` a cada álbum en `data.json`. Actualizado `project.js` para cargar álbumes como secuencias numeradas (igual que comisiones), eliminando la dependencia de `albums.json`.
+
+#### Problema
+
+Los álbumes del family archive tenían imágenes con nombres de timestamp del escáner, imposibles de gestionar manualmente. Añadir o reordenar imágenes requería editar `albums.json` con los nombres exactos. El sistema era frágil y difícil de mantener.
+
+#### Solución
+
+1. **Renombrado masivo**: Las 877 imágenes se renombraron a números secuenciales (1.webp ... N.webp), preservando el orden original del `albums.json` (que coincide con el orden cronológico de escaneo).
+
+2. **`imageCount` en data.json**: Cada álbum ahora tiene un campo `imageCount` que indica cuántas imágenes contiene. Para añadir imágenes, basta con añadir archivos numerados y actualizar el contador.
+
+3. **Carga simplificada**: `project.js` ya no necesita fetch a `albums.json`. Los álbumes se cargan exactamente igual que las comisiones: `{basePath}/{n}.webp` para n de 1 a imageCount.
+
+#### Conteos por álbum
+
+| Álbum | Imágenes |
+|-------|----------|
+| 1987_rhodes | 58 |
+| 1989 | 44 |
+| 1990 | 47 |
+| 1993_4 | 53 |
+| 1993_wed | 64 |
+| 1994 | 60 |
+| 1999_connor | 72 |
+| 2001 | 129 |
+| 2002-2003 | 144 |
+| 2003-2004_turkey | 150 |
+| house | 22 |
+| misc | 34 |
+| **Total** | **877** |
+
+#### Para añadir imágenes a un álbum
+
+1. Añadir archivos `.webp` numerados consecutivamente después del último
+2. Actualizar `imageCount` en `data.json`
+3. No se necesita ningún otro cambio
+
+#### Archivos modificados
+
+- `data/data.json` — Añadido `imageCount` a cada álbum
+- `project.js` — Álbumes usan secuencia numérica, eliminada dependencia de `albums.json`
+- `data/familyArchive/ashlee/*/` — 877 imágenes renombradas a secuencia numérica
+- `data/familyArchive/ashlee/albums.json` — Ya no es necesario (puede eliminarse)
