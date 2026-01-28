@@ -1,78 +1,51 @@
 {
   "contact": {
     "email": "cashlee.purle@gmail.com",
-    "phone": "+44 (0) 747 5121424"
+    "phone": "+44 (0) 747 5121424",
+    "instagram": "conor_ashlee"
   },
   "projects": [
     {
       "slug": "allEars",
       "title": "i am all ears",
-      "year": "2023",
-      "technique": "Mixed media",
-      "dimensions": "Variable",
-      "description": "An exploration of listening and attention through visual forms.",
       "imageCount": 27,
-      "password": null,
-      "order": 1
+      "password": null
     },
     {
       "slug": "belladona",
       "title": "belladona",
-      "year": "2023",
-      "technique": "Photography",
-      "dimensions": "Various",
-      "description": "A photographic series exploring themes of beauty and danger.",
       "imageCount": 173,
-      "extra": "true",
-      "password": null,
-      "order": 2
+      "extra": true,
+      "password": null
     },
     {
       "slug": "buttercup",
       "title": "pucker up butter cup",
-      "year": "2024",
-      "technique": "Digital collage",
-      "dimensions": "Digital",
-      "description": "A playful investigation of color, texture, and digital manipulation.",
       "imageCount": 228,
-      "password": "bloom",
-      "order": 3
+      "password": "bloom"
     }
   ],
   "commissions": [
     {
       "slug": "kate",
       "title": "Kate",
-      "year": "2024",
-      "client": "Private commission",
-      "description": "Custom artwork created for private collection.",
-      "imageCount": 4,
-      "order": 1
+      "imageCount": 4
     },
     {
       "slug": "r1",
       "title": "R1",
-      "year": "2024",
-      "client": "Private commission",
-      "description": "Commissioned work exploring personal narratives.",
-      "imageCount": 3,
-      "order": 2
+      "imageCount": 3
     },
     {
       "slug": "shainy",
       "title": "Shainy",
-      "year": "2024",
-      "client": "Private commission",
-      "description": "Bespoke visual project for private client.",
-      "imageCount": 4,
-      "order": 3
+      "imageCount": 4
     }
   ],
   "familyArchive": [
     {
       "slug": "ashlee",
       "title": "Ashlee",
-      "description": "Family archive collection spanning multiple decades.",
       "albums": [
         {
           "slug": "1987_rhodes",

@@ -52,7 +52,7 @@ function loadBioImages() {
         const img = document.createElement('img');
         img.src = path;
         img.alt = `Bio ${index + 1}`;
-        img.className = 'bio-me-image interactive';
+        img.className = 'bio-me-image';
         img.addEventListener('click', () => openBioLightbox(path));
         bioImagesContainer.appendChild(img);
     });

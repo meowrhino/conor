@@ -2,15 +2,15 @@
    style.css — Global styles for Conor Ashlee-Purle portfolio
 
    Architecture:
-   - Multi-page site: index.html (home), project.html (gallery), about.html
+   - Multi-page site: index.html, project.html, about.html, commission.html,
+     extra.html, familyArchive.html
    - All interactive elements use .interactive class (opacity 0.85 → 1 on hover)
    - Gallery images have their own opacity rules (0.85 → 1, no scale)
-   - Background: CSS grid pattern + noise overlay (injected by noise.js)
+   - Background: blackGlitch.webp + noise overlay (injected by noise.js)
 
    Z-index layers:
      10     .centered-container (main menu)
-     50     .section-screen (commissions, family archive overlays)
-     99     .info-panel (project extra)
+     50     .section-screen (family archive)
     100     .top-left-actions (home/about buttons)
     100     .preloader
    1000     .lightbox
@@ -185,12 +185,7 @@ body.is-home .top-left-actions .btn-home {
     height: auto;
 }
 
-/* Commission thumbnails are larger */
-#commissions-screen .menu-buttons img {
-    max-height: 170px;
-}
-
-/* ---------- Section screens (commissions, family archive) ---------- */
+/* ---------- Section screens (family archive) ---------- */
 
 .section-screen {
     position: fixed;
@@ -621,14 +616,4 @@ body.is-home .top-left-actions .btn-home {
 
 .bio-me-image:hover {
     opacity: 1;
-}
-
-.ig-link {
-    display: inline-block;
-    margin-top: 1rem;
-}
-
-.ig-button {
-    max-width: 60px;
-    height: auto;
 }

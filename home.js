@@ -1,12 +1,14 @@
 /**
  * home.js — Main menu logic for index.html
  *
- * Loads data.json, populates menu buttons for projects/commissions/albums,
+ * Loads data.json, populates menu buttons for projects,
  * handles password-protected projects, and manages screen navigation.
  *
  * Navigation flow:
- *   Main menu → Commissions screen | Family archive screen | Password screen
- *   Any selection → project.html?type=...&slug=...
+ *   Main menu → Password screen (for protected projects)
+ *   Projects → project.html?type=project&slug=...
+ *   Commissions → commission.html
+ *   Family Archive → familyArchive.html
  */
 
 let appData = null;
@@ -58,19 +60,6 @@ function populateMenu() {
         img.alt = project.title;
         img.addEventListener('click', () => handleProjectClick(project));
         projectsContainer.appendChild(img);
-    });
-
-
-    // Family archive albums — handwritten title images
-    const albumsContainer = document.getElementById('family-archive-albums');
-    const archive = appData.familyArchive[0];
-    archive.albums.forEach(album => {
-        const img = document.createElement('img');
-        img.className = 'interactive';
-        img.src = `data/familyArchive/${archive.slug}/${album.slug}/title.webp`;
-        img.alt = album.title;
-        img.addEventListener('click', () => goToProject('album', `${archive.slug}/${album.slug}`));
-        albumsContainer.appendChild(img);
     });
 }
 
@@ -174,7 +163,6 @@ function setupEventListeners() {
 }
 
 function goHome() {
-    document.getElementById('family-archive-screen').classList.add('hidden');
     document.getElementById('password-screen').classList.add('hidden');
     document.getElementById('main-menu').classList.remove('hidden');
     setHomeState(true);
