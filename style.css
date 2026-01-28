@@ -479,7 +479,10 @@ body.is-home .top-left-actions .btn-home {
 }
 
 .section-title {
+    max-height: 50px;
     max-width: 200px;
+    width: auto;
+    height: auto;
 }
 
 /* ---------- Extra horizontal scroll ---------- */
