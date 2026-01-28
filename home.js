@@ -60,16 +60,6 @@ function populateMenu() {
         projectsContainer.appendChild(img);
     });
 
-    // Commissions — first image as thumbnail
-    const commissionsContainer = document.getElementById('commissions-buttons');
-    appData.commissions.forEach(commission => {
-        const img = document.createElement('img');
-        img.className = 'interactive';
-        img.src = `data/commission/${commission.slug}/1.webp`;
-        img.alt = commission.title;
-        img.addEventListener('click', () => goToProject('commission', commission.slug));
-        commissionsContainer.appendChild(img);
-    });
 
     // Family archive albums — handwritten title images
     const albumsContainer = document.getElementById('family-archive-albums');
@@ -157,11 +147,9 @@ function setupEventListeners() {
         window.location.href = 'about.html';
     });
 
-    // Show commissions sub-screen
+    // Navigate to commission page
     document.getElementById('commissions-link').addEventListener('click', () => {
-        document.getElementById('main-menu').classList.add('hidden');
-        document.getElementById('commissions-screen').classList.remove('hidden');
-        setHomeState(false);
+        window.location.href = 'commission.html';
     });
 
     // Navigate to family archive page
@@ -186,7 +174,6 @@ function setupEventListeners() {
 }
 
 function goHome() {
-    document.getElementById('commissions-screen').classList.add('hidden');
     document.getElementById('family-archive-screen').classList.add('hidden');
     document.getElementById('password-screen').classList.add('hidden');
     document.getElementById('main-menu').classList.remove('hidden');

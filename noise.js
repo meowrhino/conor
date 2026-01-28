@@ -36,5 +36,5 @@ function setupNoiseCanvas() {
         'repeat, no-repeat';
 
     document.body.style.backgroundAttachment =
-        'scroll, fixed';
+        'fixed, fixed';
 }
