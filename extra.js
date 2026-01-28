@@ -4,6 +4,7 @@
  * Displays a horizontal scrolling gallery of extra images for a project.
  * URL params: ?slug={projectSlug}
  * Images loaded from: data/projects/{slug}/extra/{n}.webp
+ * Image count from: data.json projects[].extraCount
  */
 
 // ---------------------------------------------------------------------------
@@ -12,7 +13,6 @@
 
 let projectSlug = null;
 let images = [];
-let imageCount = 0;
 
 // ---------------------------------------------------------------------------
 // Initialization
@@ -23,6 +23,7 @@ async function init() {
     projectSlug = params.get('slug');
 
     if (!projectSlug) {
+        console.error('[extra.js] No slug provided in URL params');
         window.location.href = 'index.html';
         return;
     }
@@ -37,52 +38,38 @@ async function init() {
 // ---------------------------------------------------------------------------
 
 /**
- * Detect how many images exist in the extra folder by trying to load them
- * sequentially until we hit a 404.
- */
-async function detectImageCount() {
-    let count = 0;
-    const basePath = `data/projects/${projectSlug}/extra/`;
-    
-    // Try up to 100 images (reasonable limit)
-    for (let i = 1; i <= 100; i++) {
-        try {
-            const response = await fetch(`${basePath}${i}.webp`, { method: 'HEAD' });
-            if (response.ok) {
-                count = i;
-            } else {
-                break;
-            }
-        } catch {
-            break;
-        }
-    }
-    
-    return count;
-}
-
-/**
- * Load all extra images and render the horizontal scroll
+ * Load all extra images using extraCount from data.json
  */
 async function loadExtraImages() {
-    imageCount = await detectImageCount();
-    
-    if (imageCount === 0) {
+    // Fetch project data
+    const response = await fetch('data/data.json');
+    const appData = await response.json();
+
+    const project = appData.projects.find(p => p.slug === projectSlug);
+
+    if (!project) {
+        console.error(`[extra.js] Project not found: ${projectSlug}`);
         window.location.href = 'index.html';
         return;
     }
 
+    if (!project.extraCount || project.extraCount <= 0) {
+        console.error(`[extra.js] Project "${projectSlug}" has no extraCount defined in data.json`);
+        window.location.href = `project.html?type=project&slug=${projectSlug}`;
+        return;
+    }
+
     const basePath = `data/projects/${projectSlug}/extra/`;
-    for (let i = 1; i <= imageCount; i++) {
+    for (let i = 1; i <= project.extraCount; i++) {
         images.push(`${basePath}${i}.webp`);
     }
 
     await preloadImages();
-    
+
     // Hide preloader, show extra container
     document.getElementById('preloader').classList.add('hidden');
     document.getElementById('extra-container').classList.remove('hidden');
-    
+
     renderHorizontalScroll();
 }
 

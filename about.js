@@ -14,9 +14,13 @@ async function init() {
     // Wire up contact links from data.json
     const emailLink = document.getElementById('email-link');
     const phoneCopy = document.getElementById('phone-copy');
+    const instagramLink = document.getElementById('instagram-link');
     const phoneNumber = appData.contact.phone;
 
     emailLink.href = `mailto:${appData.contact.email}`;
+    instagramLink.href = `https://www.instagram.com/${appData.contact.instagram}/`;
+    instagramLink.target = '_blank';
+    instagramLink.rel = 'noopener noreferrer';
 
     // Copy phone number to clipboard on click
     phoneCopy.addEventListener('click', async () => {
@@ -37,8 +41,31 @@ async function init() {
     });
 
     setupNoiseCanvas();
+    loadCvImages();
     loadBioImages();
     setupEventListeners();
+}
+
+/**
+ * Load CV images from data/bio/cv/ and make them clickable for lightbox
+ */
+function loadCvImages() {
+    const cvImagesContainer = document.getElementById('cv-images');
+    const cvImagePaths = [
+        'data/bio/cv/1.webp',
+        'data/bio/cv/2.webp',
+        'data/bio/cv/3.webp',
+        'data/bio/cv/4.webp'
+    ];
+
+    cvImagePaths.forEach((path, index) => {
+        const img = document.createElement('img');
+        img.src = path;
+        img.alt = `CV ${index + 1}`;
+        img.className = 'cv-image';
+        img.addEventListener('click', () => openBioLightbox(path));
+        cvImagesContainer.appendChild(img);
+    });
 }
 
 /**
@@ -47,7 +74,7 @@ async function init() {
 function loadBioImages() {
     const bioImagesContainer = document.getElementById('bio-images');
     const bioImagePaths = ['data/bio/me/1.webp', 'data/bio/me/2.webp'];
-    
+
     bioImagePaths.forEach((path, index) => {
         const img = document.createElement('img');
         img.src = path;

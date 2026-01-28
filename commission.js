@@ -2,7 +2,8 @@
  * commission.js — Commission gallery page logic
  *
  * Displays a horizontal scrolling gallery of all commission images.
- * Images loaded from: data/commission/{slug}/{n}.webp for each commission in data.json
+ * Images loaded from: data/commission/{slug}/{n}.webp
+ * Image count from: data.json commissions[].imageCount
  */
 
 // ---------------------------------------------------------------------------
@@ -26,40 +27,37 @@ async function init() {
 // ---------------------------------------------------------------------------
 
 /**
- * Load all commission images from data.json
- * Each commission is stored as an object with its images
+ * Load all commission images using imageCount from data.json
  */
 async function loadCommissionImages() {
     const response = await fetch('data/data.json');
     const appData = await response.json();
 
-    // For each commission, detect how many images exist
+    if (!appData.commissions || appData.commissions.length === 0) {
+        console.error('[commission.js] No commissions found in data.json');
+        window.location.href = 'index.html';
+        return;
+    }
+
+    // Build images array from each commission using imageCount
     for (const commission of appData.commissions) {
+        if (!commission.imageCount || commission.imageCount <= 0) {
+            console.warn(`[commission.js] Commission "${commission.slug}" has no imageCount, skipping`);
+            continue;
+        }
+
         const basePath = `data/commission/${commission.slug}/`;
         const commissionImages = [];
-        let i = 1;
 
-        // Try loading images until we hit a 404
-        while (i <= 100) {
-            try {
-                const res = await fetch(`${basePath}${i}.webp`, { method: 'HEAD' });
-                if (res.ok) {
-                    commissionImages.push(`${basePath}${i}.webp`);
-                    i++;
-                } else {
-                    break;
-                }
-            } catch {
-                break;
-            }
+        for (let i = 1; i <= commission.imageCount; i++) {
+            commissionImages.push(`${basePath}${i}.webp`);
         }
 
-        if (commissionImages.length > 0) {
-            images.push({ slug: commission.slug, images: commissionImages });
-        }
+        images.push({ slug: commission.slug, images: commissionImages });
     }
 
     if (images.length === 0) {
+        console.error('[commission.js] No commission images to display');
         window.location.href = 'index.html';
         return;
     }

@@ -449,6 +449,26 @@ body.is-home .top-left-actions .btn-home {
     height: auto;
 }
 
+.cv-images {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    max-width: 500px;
+}
+
+.cv-image {
+    width: 100%;
+    height: auto;
+    cursor: pointer;
+    opacity: 0.85;
+    transition: opacity 0.3s ease;
+}
+
+.cv-image:hover {
+    opacity: 1;
+}
+
 .about-sections {
     display: flex;
     flex-direction: column;
@@ -608,7 +628,7 @@ body.is-home .top-left-actions .btn-home {
 
 .bio-me-image {
     width: auto;
-    max-height: 100px;
+    max-height: 150px;
     cursor: pointer;
     opacity: 0.85;
     transition: opacity 0.3s ease;

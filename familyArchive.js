@@ -26,9 +26,25 @@ async function init() {
 
 function populateAlbums() {
     const albumsContainer = document.getElementById('family-archive-albums');
+
+    if (!appData.familyArchive || appData.familyArchive.length === 0) {
+        console.error('[familyArchive.js] No familyArchive found in data.json');
+        return;
+    }
+
     const archive = appData.familyArchive[0];
-    
+
+    if (!archive.albums || archive.albums.length === 0) {
+        console.error(`[familyArchive.js] No albums found in archive: ${archive.slug}`);
+        return;
+    }
+
     archive.albums.forEach(album => {
+        if (!album.imageCount || album.imageCount <= 0) {
+            console.warn(`[familyArchive.js] Album "${album.slug}" has no imageCount, skipping`);
+            return;
+        }
+
         const img = document.createElement('img');
         img.className = 'interactive';
         img.src = `data/familyArchive/${archive.slug}/${album.slug}/title.webp`;

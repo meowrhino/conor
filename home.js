@@ -53,7 +53,18 @@ function setHomeState(isHome) {
 function populateMenu() {
     // Projects — title images as buttons
     const projectsContainer = document.getElementById('projects-buttons');
+
+    if (!appData.projects || appData.projects.length === 0) {
+        console.error('[home.js] No projects found in data.json');
+        return;
+    }
+
     appData.projects.forEach(project => {
+        if (!project.imageCount || project.imageCount <= 0) {
+            console.warn(`[home.js] Project "${project.slug}" has no imageCount, skipping`);
+            return;
+        }
+
         const img = document.createElement('img');
         img.className = 'interactive';
         setTitleImage(img, project.slug, `data/assets/titles/${project.slug}.webp`);

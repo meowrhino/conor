@@ -37,6 +37,7 @@ async function init() {
     currentSlug = params.get('slug');
 
     if (!currentType || !currentSlug) {
+        console.error('[project.js] Missing URL params: type or slug');
         window.location.href = 'index.html';
         return;
     }
@@ -74,15 +75,29 @@ async function loadImageManifest(path) {
 async function loadProject() {
     if (currentType === 'project') {
         currentProject = appData.projects.find(p => p.slug === currentSlug);
+        if (!currentProject) {
+            console.error(`[project.js] Project not found: ${currentSlug}`);
+        }
     } else if (currentType === 'commission') {
         currentProject = appData.commissions.find(c => c.slug === currentSlug);
+        if (!currentProject) {
+            console.error(`[project.js] Commission not found: ${currentSlug}`);
+        }
     } else if (currentType === 'album') {
         // Album slugs are "archiveSlug/albumSlug"
         const [archiveSlug, albumSlug] = currentSlug.split('/');
         const archive = appData.familyArchive.find(a => a.slug === archiveSlug);
-        if (!archive) { window.location.href = 'index.html'; return; }
+        if (!archive) {
+            console.error(`[project.js] Archive not found: ${archiveSlug}`);
+            window.location.href = 'index.html';
+            return;
+        }
         const album = archive.albums.find(a => a.slug === albumSlug);
-        if (!album) { window.location.href = 'index.html'; return; }
+        if (!album) {
+            console.error(`[project.js] Album not found: ${albumSlug} in archive ${archiveSlug}`);
+            window.location.href = 'index.html';
+            return;
+        }
 
         currentProject = {
             title: album.title,
@@ -91,9 +106,17 @@ async function loadProject() {
             slug: albumSlug,
             archiveSlug: archiveSlug
         };
+    } else {
+        console.error(`[project.js] Unknown type: ${currentType}`);
     }
 
     if (!currentProject) {
+        window.location.href = 'index.html';
+        return;
+    }
+
+    if (!currentProject.imageCount || currentProject.imageCount <= 0) {
+        console.error(`[project.js] No imageCount defined for ${currentType}: ${currentSlug}`);
         window.location.href = 'index.html';
         return;
     }
@@ -264,7 +287,7 @@ function updateLightboxButtons() {
 
 function hasExtra() {
     if (currentType !== 'project') return false;
-    return currentProject?.extra === true || currentProject?.extra === 'true';
+    return currentProject?.extraCount > 0;
 }
 
 function setupInfoImage() {
