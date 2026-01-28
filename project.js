@@ -289,28 +289,24 @@ function hasExtra() {
 }
 
 function setupInfoImage() {
-    const infoPanel = document.getElementById('project-info');
     const infoImg = document.getElementById('project-info-image');
-
-    if (!infoPanel || !infoImg) return;
+    if (!infoImg) return;
 
     // Projects: load from projects folder
     if (currentType === 'project') {
         infoImg.src = `data/projects/${currentSlug}/info.webp`;
-        infoPanel.classList.remove('hidden');
+        infoImg.classList.remove('hidden');
         setupInfoLightbox(infoImg);
+        if (window.setupFadeOnLoad) window.setupFadeOnLoad();
     }
     // Albums: load from family archive folder
     else if (currentType === 'album') {
-        const infoPath = `data/familyArchive/${currentProject.archiveSlug}/${currentProject.slug}/info.webp`;
-        infoImg.src = infoPath;
-        infoPanel.classList.remove('hidden');
+        infoImg.src = `data/familyArchive/${currentProject.archiveSlug}/${currentProject.slug}/info.webp`;
+        infoImg.classList.remove('hidden');
         setupInfoLightbox(infoImg);
+        if (window.setupFadeOnLoad) window.setupFadeOnLoad();
     }
-    // Commissions: hide info panel
-    else {
-        infoPanel.classList.add('hidden');
-    }
+    // Commissions: keep info hidden (already has class hidden)
 }
 
 /**
@@ -339,8 +335,11 @@ function setupInfoLightbox(infoImg) {
 function setupExtraButton() {
     const extraBtn = document.querySelector('.btn-extra');
     if (!extraBtn) return;
-    if (!hasExtra()) {
-        extraBtn.classList.add('hidden');
+    // Show extra button only if project has extra images
+    if (hasExtra()) {
+        extraBtn.classList.remove('hidden');
+        // Trigger fade-in for newly visible element
+        if (window.setupFadeOnLoad) window.setupFadeOnLoad();
     }
 }
 
@@ -349,17 +348,17 @@ function setupExtraButton() {
 // ---------------------------------------------------------------------------
 
 function setupEventListeners() {
-    const homeBtn = document.querySelector('.btn-home');
-    
+    const navBtn = document.querySelector('.btn-nav');
+
     // For albums, change to back button that goes to family archive
     if (currentType === 'album') {
-        homeBtn.src = 'data/assets/buttons/back.webp';
-        homeBtn.alt = 'Back';
-        homeBtn.addEventListener('click', () => {
+        navBtn.src = 'data/assets/buttons/back.webp';
+        navBtn.alt = 'Back';
+        navBtn.addEventListener('click', () => {
             window.location.href = 'familyArchive.html';
         });
     } else {
-        homeBtn.addEventListener('click', () => {
+        navBtn.addEventListener('click', () => {
             window.location.href = 'index.html';
         });
     }

@@ -20,9 +20,9 @@
     <!-- Top-left actions -->
     <div class="top-left-actions">
         <div id="about-btn" class="about-btn interactive">
-            <img src="data/assets/titles/conor.webp" alt="About">
+            <img src="data/assets/titles/conor.webp" alt="About" class="fade-on-load">
         </div>
-        <img src="data/assets/buttons/home.webp" alt="Home" class="btn-home interactive interactive--lg">
+        <img src="data/assets/buttons/home.webp" alt="Home" class="btn-home interactive interactive--lg fade-on-load">
     </div>
 
     <!-- Main Menu (centered) -->
@@ -33,13 +33,13 @@
         
         <div class="menu-section" id="commissions-link">
             <div class="menu-title interactive">
-                <img src="data/assets/titles/commission.webp" alt="Commissions">
+                <img src="data/assets/titles/commission.webp" alt="Commissions" class="fade-on-load">
             </div>
         </div>
 
         <div class="menu-section" id="family-archive-link">
             <div class="menu-title interactive">
-                <img src="data/assets/titles/familyArchive.webp" alt="Family Archive">
+                <img src="data/assets/titles/familyArchive.webp" alt="Family Archive" class="fade-on-load">
             </div>
         </div>
     </div>
@@ -47,19 +47,20 @@
     <!-- Password Screen -->
     <div id="password-screen" class="hidden">
         <div class="password-container">
-            <img src="data/assets/password/password.webp" alt="Password" class="password-title">
+            <img src="data/assets/password/password.webp" alt="Password" class="password-title fade-on-load">
             <input type="password" id="password-input" class="password-input">
             <div class="password-feedback">
                 <img id="password-feedback-img" src="" alt="" class="hidden">
             </div>
             <div class="password-buttons">
-                <img src="data/assets/buttons/back.webp" alt="Back" class="btn-back interactive">
+                <img src="data/assets/buttons/back.webp" alt="Back" class="btn-back interactive fade-on-load">
             </div>
         </div>
     </div>
 
     <script src="gate.js"></script>
     <script src="noise.js"></script>
+    <script src="loader.js"></script>
     <script src="home.js"></script>
 </body>
 </html>

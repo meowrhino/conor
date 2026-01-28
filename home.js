@@ -66,12 +66,15 @@ function populateMenu() {
         }
 
         const img = document.createElement('img');
-        img.className = 'interactive';
+        img.className = 'interactive fade-on-load';
         setTitleImage(img, project.slug, `data/assets/titles/${project.slug}.webp`);
         img.alt = project.title;
         img.addEventListener('click', () => handleProjectClick(project));
         projectsContainer.appendChild(img);
     });
+
+    // Trigger progressive loading for dynamically added images
+    if (window.setupFadeOnLoad) window.setupFadeOnLoad();
 }
 
 // ---------------------------------------------------------------------------

@@ -64,35 +64,11 @@ async function loadExtraImages() {
         images.push(`${basePath}${i}.webp`);
     }
 
-    await preloadImages();
-
-    // Hide preloader, show extra container
+    // Show container immediately (progressive loading)
     document.getElementById('preloader').classList.add('hidden');
     document.getElementById('extra-container').classList.remove('hidden');
 
     renderHorizontalScroll();
-}
-
-/**
- * Preload all images with progress bar
- */
-async function preloadImages() {
-    const loaderBar = document.getElementById('loader-bar');
-    let loaded = 0;
-
-    const promises = images.map(src => {
-        return new Promise(resolve => {
-            const img = new Image();
-            img.onload = img.onerror = () => {
-                loaded++;
-                loaderBar.style.width = (loaded / images.length * 100) + '%';
-                resolve();
-            };
-            img.src = src;
-        });
-    });
-
-    await Promise.all(promises);
 }
 
 // ---------------------------------------------------------------------------
@@ -108,11 +84,13 @@ function renderHorizontalScroll() {
 
     images.forEach((src, index) => {
         const img = document.createElement('img');
-        img.src = src;
         img.alt = `Extra ${index + 1}`;
-        img.className = 'extra-image';
+        img.className = 'extra-image fade-on-load';
+        img.src = src;
         scrollContainer.appendChild(img);
     });
+
+    if (window.setupFadeOnLoad) window.setupFadeOnLoad();
 }
 
 // ---------------------------------------------------------------------------

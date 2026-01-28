@@ -1,7 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(done)",
+      "Bash(__NEW_LINE_f9b5c0f31356d852__ echo \"=== .commission-image usage ===\")",
+      "Bash(__NEW_LINE_f9b5c0f31356d852__ echo -e \"\\\\n=== .extra-image usage ===\")",
+      "Bash(__NEW_LINE_f9b5c0f31356d852__ echo -e \"\\\\n=== .bio-me-image usage ===\")"
     ]
   }
 }

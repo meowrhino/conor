@@ -62,10 +62,12 @@ function loadCvImages() {
         const img = document.createElement('img');
         img.src = path;
         img.alt = `CV ${index + 1}`;
-        img.className = 'cv-image';
+        img.className = 'cv-image fade-on-load';
         img.addEventListener('click', () => openBioLightbox(path));
         cvImagesContainer.appendChild(img);
     });
+
+    if (window.setupFadeOnLoad) window.setupFadeOnLoad();
 }
 
 /**
@@ -79,10 +81,12 @@ function loadBioImages() {
         const img = document.createElement('img');
         img.src = path;
         img.alt = `Bio ${index + 1}`;
-        img.className = 'bio-me-image';
+        img.className = 'bio-me-image fade-on-load';
         img.addEventListener('click', () => openBioLightbox(path));
         bioImagesContainer.appendChild(img);
     });
+
+    if (window.setupFadeOnLoad) window.setupFadeOnLoad();
 }
 
 /**

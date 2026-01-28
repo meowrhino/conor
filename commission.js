@@ -62,40 +62,14 @@ async function loadCommissionImages() {
         return;
     }
 
-    await preloadImages();
-
-    // Hide preloader, show commission container
+    // Show container immediately (progressive loading)
     document.getElementById('preloader').classList.add('hidden');
     document.getElementById('commission-container').classList.remove('hidden');
 
     renderHorizontalScroll();
 }
 
-/**
- * Preload all images with progress bar
- */
-async function preloadImages() {
-    const loaderBar = document.getElementById('loader-bar');
-    let loaded = 0;
-
-    // Flatten all images for preloading
-    const allImages = images.flatMap(commission => commission.images);
-    const total = allImages.length;
-
-    const promises = allImages.map(src => {
-        return new Promise(resolve => {
-            const img = new Image();
-            img.onload = img.onerror = () => {
-                loaded++;
-                loaderBar.style.width = (loaded / total * 100) + '%';
-                resolve();
-            };
-            img.src = src;
-        });
-    });
-
-    await Promise.all(promises);
-}
+// Note: preloadImages() removed — using progressive loading with fade-on-load class
 
 // ---------------------------------------------------------------------------
 // Horizontal scroll rendering
@@ -116,15 +90,17 @@ function renderHorizontalScroll() {
 
         commission.images.forEach((src, imgIndex) => {
             const img = document.createElement('img');
-            img.src = src;
             img.alt = `${commission.slug} ${imgIndex + 1}`;
-            img.className = 'commission-image';
+            img.className = 'commission-image fade-on-load';
             img.addEventListener('click', () => openLightbox(src));
+            img.src = src;
             group.appendChild(img);
         });
 
         scrollContainer.appendChild(group);
     });
+
+    if (window.setupFadeOnLoad) window.setupFadeOnLoad();
 }
 
 // ---------------------------------------------------------------------------

@@ -46,12 +46,14 @@ function populateAlbums() {
         }
 
         const img = document.createElement('img');
-        img.className = 'interactive';
+        img.className = 'interactive fade-on-load';
         img.src = `data/familyArchive/${archive.slug}/${album.slug}/title.webp`;
         img.alt = album.title;
         img.addEventListener('click', () => goToAlbum(archive.slug, album.slug));
         albumsContainer.appendChild(img);
     });
+
+    if (window.setupFadeOnLoad) window.setupFadeOnLoad();
 }
 
 // ---------------------------------------------------------------------------

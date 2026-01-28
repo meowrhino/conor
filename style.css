@@ -133,6 +133,11 @@ body.is-home .top-left-actions .btn-home {
     display: none;
 }
 
+/* Home button in top-left-actions (about, familyArchive, password) */
+.top-left-actions .btn-home {
+    max-width: 100px;
+}
+
 .about-btn img {
     max-width: 180px;
     height: auto;
@@ -338,7 +343,7 @@ body.is-home .top-left-actions .btn-home {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    margin-top: 3rem;
+    margin-top: 5rem;
     padding: 0 0 2rem;
 }
 
@@ -349,8 +354,9 @@ body.is-home .top-left-actions .btn-home {
 
 .gallery-bottom-right {
     display: flex;
+    flex-direction: column;
     align-items: flex-end;
-    gap: 1.5rem;
+    gap: 1rem;
 }
 
 .btn-nav {
