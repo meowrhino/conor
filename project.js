@@ -108,7 +108,8 @@ async function loadProject() {
     document.getElementById('gallery').classList.remove('hidden');
 
     renderMasonryGallery();
-    setupInfoPanel();
+    setupInfoImage();
+    setupExtraButton();
 }
 
 // ---------------------------------------------------------------------------
@@ -244,37 +245,35 @@ function updateLightboxButtons() {
 }
 
 // ---------------------------------------------------------------------------
-// Info panel — shows project metadata (year, technique, etc.)
+// Info image + Extra button
 // ---------------------------------------------------------------------------
 
-/** Build info panel content using DOM methods (no innerHTML) */
-function setupInfoPanel() {
-    const container = document.getElementById('info-content');
-    container.innerHTML = '';
+function hasExtra() {
+    if (currentType !== 'project') return false;
+    return currentProject?.extra === true || currentProject?.extra === 'true';
+}
 
-    const h3 = document.createElement('h3');
-    h3.textContent = currentProject.title;
-    container.appendChild(h3);
+function setupInfoImage() {
+    const infoPanel = document.getElementById('project-info');
+    const infoImg = document.getElementById('project-info-image');
 
-    const fields = currentType === 'album'
-        ? [['Description', currentProject.description], ['Images', currentProject.imageCount]]
-        : [
-            ['Year', currentProject.year],
-            ['Technique', currentProject.technique],
-            ['Dimensions', currentProject.dimensions],
-            ['Client', currentProject.client],
-            ['Description', currentProject.description]
-        ];
+    if (!infoPanel || !infoImg) return;
 
-    fields.forEach(([label, value]) => {
-        if (!value) return;
-        const p = document.createElement('p');
-        const strong = document.createElement('strong');
-        strong.textContent = label + ': ';
-        p.appendChild(strong);
-        p.appendChild(document.createTextNode(value));
-        container.appendChild(p);
-    });
+    if (currentType !== 'project') {
+        infoPanel.classList.add('hidden');
+        return;
+    }
+
+    infoImg.src = `data/projects/${currentSlug}/info.webp`;
+    infoPanel.classList.remove('hidden');
+}
+
+function setupExtraButton() {
+    const extraBtn = document.querySelector('.btn-extra');
+    if (!extraBtn) return;
+    if (!hasExtra()) {
+        extraBtn.classList.add('hidden');
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -286,9 +285,7 @@ function setupEventListeners() {
         window.location.href = 'index.html';
     });
 
-    document.querySelector('.btn-info').addEventListener('click', () => {
-        document.getElementById('info-panel').classList.toggle('hidden');
-    });
+    // Extra button behavior to be implemented separately
 
     // Lightbox controls
     document.querySelector('.lightbox-close').addEventListener('click', closeLightbox);

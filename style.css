@@ -10,7 +10,7 @@
    Z-index layers:
      10     .centered-container (main menu)
      50     .section-screen (commissions, family archive overlays)
-     99     .info-panel (project info)
+     99     .info-panel (project extra)
     100     .top-left-actions (home/about buttons)
     100     .preloader
    1000     .lightbox
@@ -342,33 +342,20 @@ body.is-home .top-left-actions .btn-home {
     max-width: 80px;
 }
 
-/* ---------- Info panel (project metadata) ---------- */
+/* ---------- Project info image (scrolls, right) ---------- */
 
-.info-panel {
-    position: fixed;
-    bottom: 8rem;
-    right: 2rem;
-    background: rgba(255, 255, 255, 0.95);
-    border: 3px solid #444cf7;
-    padding: 2rem;
-    max-width: 400px;
-    z-index: 99;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+.project-info {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 2rem;
+    padding: 0 2rem 2rem;
 }
 
-#info-content {
-    font-size: 0.95rem;
-    line-height: 1.6;
-}
-
-#info-content h3 {
-    margin-bottom: 1rem;
-    color: #444cf7;
-    font-size: 1.3rem;
-}
-
-#info-content p {
-    margin-bottom: 0.5rem;
+.project-info img {
+    max-width: 360px;
+    width: 100%;
+    height: auto;
+    display: block;
 }
 
 /* ---------- Home button (after gallery grid) ---------- */
