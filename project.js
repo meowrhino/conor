@@ -124,12 +124,12 @@ async function loadProject() {
     document.title = currentProject.title;
 
     await prepareImages();
-    await preloadImages();
 
-    // Hide preloader, show gallery
+    // Show gallery immediately (no blocking preloader)
     document.getElementById('preloader').classList.add('hidden');
     document.getElementById('gallery').classList.remove('hidden');
 
+    // Render gallery with progressive loading (images fade in as they load)
     renderMasonryGallery();
     setupInfoImage();
     setupExtraButton();
@@ -169,27 +169,10 @@ async function prepareImages() {
 }
 
 // ---------------------------------------------------------------------------
-// Preloader — loads all images before showing gallery
+// Progressive loading — images fade in as they load (no blocking preloader)
 // ---------------------------------------------------------------------------
 
-async function preloadImages() {
-    const loaderBar = document.getElementById('loader-bar');
-    let loaded = 0;
-
-    const promises = images.map(src => {
-        return new Promise(resolve => {
-            const img = new Image();
-            img.onload = img.onerror = () => {
-                loaded++;
-                loaderBar.style.width = (loaded / images.length * 100) + '%';
-                resolve();
-            };
-            img.src = src;
-        });
-    });
-
-    await Promise.all(promises);
-}
+// Note: preloadImages() removed — progressive loading happens in renderMasonryGallery()
 
 // ---------------------------------------------------------------------------
 // Masonry gallery — responsive column layout
@@ -211,6 +194,7 @@ function getColumnCount() {
 /**
  * Render masonry gallery by distributing images across columns
  * in round-robin order. Each column is a flex column container.
+ * Images start hidden and fade in progressively as they load.
  */
 function renderMasonryGallery() {
     const grid = document.getElementById('gallery-grid');
@@ -227,12 +211,26 @@ function renderMasonryGallery() {
 
     images.forEach((src, index) => {
         const container = document.createElement('div');
-        container.className = 'gallery-item';
+        container.className = 'gallery-item gallery-item--loading';
 
         const img = document.createElement('img');
-        img.src = src;
         img.alt = `${currentProject.title} - ${index + 1}`;
         img.addEventListener('click', () => openLightbox(index));
+
+        // Fade in when image loads
+        img.onload = () => {
+            container.classList.remove('gallery-item--loading');
+            container.classList.add('gallery-item--loaded');
+        };
+
+        // Also handle error (show anyway to avoid blank spots)
+        img.onerror = () => {
+            container.classList.remove('gallery-item--loading');
+            container.classList.add('gallery-item--loaded');
+        };
+
+        // Set src after attaching event listeners
+        img.src = src;
 
         container.appendChild(img);
         columns[index % columnCount].appendChild(container);

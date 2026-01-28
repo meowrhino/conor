@@ -323,6 +323,15 @@ body.is-home .top-left-actions .btn-home {
     opacity: 1;
 }
 
+/* Progressive loading: images start invisible and fade in when loaded */
+.gallery-item--loading img {
+    opacity: 0;
+}
+
+.gallery-item--loaded img {
+    opacity: 0.85;
+}
+
 /* Gallery menu — positioned after the grid, not fixed */
 .gallery-menu {
     display: flex;
@@ -612,13 +621,15 @@ body.is-home .top-left-actions .btn-home {
     max-width: 100px;
 }
 
-/* ---------- Bio images (positioned like project-info) ---------- */
+/* ---------- Bio images (fixed, bottom-right) ---------- */
 
 .bio-images-container {
+    position: fixed;
+    right: 2rem;
+    bottom: 2rem;
     display: flex;
     justify-content: flex-end;
-    margin-top: 2rem;
-    padding: 0 2rem 2rem;
+    z-index: 99;
 }
 
 .bio-images {
