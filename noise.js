@@ -21,18 +21,20 @@ function setupNoiseCanvas() {
 
     const noiseUrl = canvas.toDataURL('image/png');
 
-    // Prepend the noise tile to the existing body background layers.
-    // The noise sits on top of the grid lines because it's listed first.
+    // Prepend the noise tile to the existing body background image.
+    // The noise sits on top of blackGlitch.webp because it's listed first.
     document.body.style.backgroundImage =
-        `url(${noiseUrl}), ` +
-        'linear-gradient(#444cf7 2px, transparent 2px), ' +
-        'linear-gradient(90deg, #444cf7 2px, transparent 2px), ' +
-        'linear-gradient(#444cf7 1px, transparent 1px), ' +
-        'linear-gradient(90deg, #444cf7 1px, #e5e5f7 1px)';
+        `url(${noiseUrl}), url('data/background/blackGlitch.webp')`;
 
     document.body.style.backgroundSize =
-        `${size}px ${size}px, 50px 50px, 50px 50px, 10px 10px, 10px 10px`;
+        `${size}px ${size}px, cover`;
 
     document.body.style.backgroundPosition =
-        '0 0, -2px -2px, -2px -2px, -1px -1px, -1px -1px';
+        '0 0, center center';
+
+    document.body.style.backgroundRepeat =
+        'repeat, no-repeat';
+
+    document.body.style.backgroundAttachment =
+        'scroll, fixed';
 }
