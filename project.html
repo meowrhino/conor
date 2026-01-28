@@ -26,18 +26,15 @@
     <div id="gallery" class="hidden">
         <div id="gallery-grid" class="gallery-grid"></div>
 
-        <!-- Bottom buttons after grid -->
-        <div class="btn-home-container">
-            <img src="data/assets/buttons/home.webp" alt="Home" class="btn-home interactive interactive--lg">
-        </div>
-        
-        <div id="gallery-menu" class="gallery-menu">
-            <img src="data/assets/buttons/3Dots.webp" alt="Extra" class="btn-extra interactive interactive--lg">
-        </div>
-
-        <!-- Project info image (scrolls with content) -->
-        <div id="project-info" class="project-info hidden">
-            <img id="project-info-image" src="" alt="Info">
+        <!-- Bottom bar: nav button left, info/extra right -->
+        <div class="gallery-bottom-bar">
+            <div class="gallery-bottom-left">
+                <img src="data/assets/buttons/home.webp" alt="Home" class="btn-nav interactive interactive--lg">
+            </div>
+            <div class="gallery-bottom-right">
+                <img src="data/assets/buttons/3Dots.webp" alt="Extra" class="btn-extra interactive interactive--lg hidden">
+                <img id="project-info-image" src="" alt="Info" class="project-info-image hidden">
+            </div>
         </div>
     </div>
 

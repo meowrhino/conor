@@ -224,7 +224,7 @@ body.is-home .top-left-actions .btn-home {
     justify-content: center;
     align-items: center;
     z-index: 50;
-    background: rgba(229, 229, 247, 0.95);
+    background: transparent;
 }
 
 .password-container {
@@ -332,45 +332,40 @@ body.is-home .top-left-actions .btn-home {
     opacity: 0.85;
 }
 
-/* Gallery menu — positioned after the grid, not fixed */
-.gallery-menu {
+/* ---------- Gallery bottom bar (nav left, info/extra right) ---------- */
+
+.gallery-bottom-bar {
     display: flex;
-    gap: 1.5rem;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: flex-end;
     margin-top: 3rem;
-    padding: 0 2rem;
+    padding: 0 0 2rem;
 }
 
-.gallery-menu img {
+.gallery-bottom-left {
+    display: flex;
+    align-items: flex-end;
+}
+
+.gallery-bottom-right {
+    display: flex;
+    align-items: flex-end;
+    gap: 1.5rem;
+}
+
+.btn-nav {
+    max-width: 100px;
+}
+
+.btn-extra {
     max-width: 80px;
 }
 
-/* ---------- Project info image (scrolls, right) ---------- */
-
-.project-info {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 2rem;
-    padding: 0 2rem 2rem;
-}
-
-.project-info img {
+.project-info-image {
     max-width: 360px;
     width: 100%;
     height: auto;
     display: block;
-}
-
-/* ---------- Home button (after gallery grid) ---------- */
-
-.btn-home-container {
-    display: flex;
-    justify-content: flex-start;
-    margin-top: 2rem;
-}
-
-.btn-home {
-    max-width: 100px;
 }
 
 /* ---------- Lightbox (full-screen image viewer) ---------- */
