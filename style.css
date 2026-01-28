@@ -42,6 +42,7 @@ body {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    /* Fixed background for desktop parallax; mobile is gated by the device overlay. */
     background-attachment: fixed;
 }
 
@@ -65,6 +66,7 @@ body {
 }
 
 #device-check-overlay.hidden {
+    /* JS toggles this to allow desktop entry. */
     display: none;
 }
 
@@ -281,6 +283,7 @@ body.is-home .top-left-actions .btn-home {
     width: 0%;
     height: 4px;
     background: #444cf7;
+    /* Width is updated by loader.js while assets load. */
     transition: width 0.3s ease;
     max-width: 400px;
 }
@@ -330,10 +333,12 @@ body.is-home .top-left-actions .btn-home {
 
 /* Progressive loading: images start invisible and fade in when loaded */
 .gallery-item--loading img {
+    /* JS applies this while the image is still downloading. */
     opacity: 0;
 }
 
 .gallery-item--loaded img {
+    /* JS swaps to this after decode to avoid popping. */
     opacity: 0.85;
 }
 
@@ -413,6 +418,7 @@ body.is-home .top-left-actions .btn-home {
     align-items: center;
     padding: 0 2rem;
     z-index: 1001;
+    /* Let clicks pass through except on actual buttons. */
     pointer-events: none;
 }
 
@@ -631,6 +637,7 @@ body.is-home .top-left-actions .btn-home {
     display: flex;
     justify-content: flex-end;
     z-index: 99;
+    /* Keeps portraits above page content without blocking lightbox. */
 }
 
 .bio-images {
