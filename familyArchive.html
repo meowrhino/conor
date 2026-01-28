@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Archive - Conor Ashlee-Purle</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data/navicon/navicon.png" type="image/png">
+</head>
+<body>
+    <!-- Mobile Gate Overlay -->
+    <div id="device-check-overlay" class="hidden">
+        <div id="device-check-message"></div>
+        <a href="#" id="mobile-check-why-link" class="hidden">Why?</a>
+        <div id="mobile-check-explanation" class="hidden">
+            This experience is designed for larger screens and requires a laptop or desktop with Chrome browser for optimal viewing.
+        </div>
+    </div>
+
+    <!-- Top-left actions -->
+    <div class="top-left-actions">
+        <div id="about-btn" class="about-btn interactive">
+            <img src="data/assets/titles/conor.webp" alt="About">
+        </div>
+        <img src="data/assets/buttons/home.webp" alt="Home" class="btn-home interactive interactive--lg">
+    </div>
+
+    <!-- Family Archive Screen -->
+    <div id="family-archive-screen" class="section-screen">
+        <div class="centered-container">
+            <div class="menu-section">
+                <div class="menu-title">
+                    <img src="data/assets/titles/familyArchive.webp" alt="Family Archive">
+                </div>
+            </div>
+            <div id="family-archive-albums" class="album-links"></div>
+        </div>
+    </div>
+
+    <script src="gate.js"></script>
+    <script src="noise.js"></script>
+    <script src="familyArchive.js"></script>
+</body>
+</html>

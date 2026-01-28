@@ -228,11 +228,25 @@ function openLightbox(index) {
 }
 
 function closeLightbox() {
-    document.getElementById('lightbox').classList.add('hidden');
+    const lightbox = document.getElementById('lightbox');
+    const lightboxNav = document.querySelector('.lightbox-nav');
+    
+    lightbox.classList.add('hidden');
+    
+    // Restore navigation arrows visibility
+    if (lightboxNav) lightboxNav.style.display = '';
+    
+    // Clear info viewing flag
+    delete lightbox.dataset.viewingInfo;
 }
 
 /** Navigate with wrapping via modulo arithmetic */
 function navigateLightbox(direction) {
+    const lightbox = document.getElementById('lightbox');
+    
+    // Don't navigate if viewing info image
+    if (lightbox.dataset.viewingInfo === 'true') return;
+    
     currentImageIndex = (currentImageIndex + direction + images.length) % images.length;
     document.getElementById('lightbox-image').src = images[currentImageIndex];
     updateLightboxButtons();
@@ -259,13 +273,46 @@ function setupInfoImage() {
 
     if (!infoPanel || !infoImg) return;
 
-    if (currentType !== 'project') {
-        infoPanel.classList.add('hidden');
-        return;
+    // Projects: load from projects folder
+    if (currentType === 'project') {
+        infoImg.src = `data/projects/${currentSlug}/info.webp`;
+        infoPanel.classList.remove('hidden');
+        setupInfoLightbox(infoImg);
     }
+    // Albums: load from family archive folder
+    else if (currentType === 'album') {
+        const infoPath = `data/familyArchive/${currentProject.archiveSlug}/${currentProject.slug}/info.webp`;
+        infoImg.src = infoPath;
+        infoPanel.classList.remove('hidden');
+        setupInfoLightbox(infoImg);
+    }
+    // Commissions: hide info panel
+    else {
+        infoPanel.classList.add('hidden');
+    }
+}
 
-    infoImg.src = `data/projects/${currentSlug}/info.webp`;
-    infoPanel.classList.remove('hidden');
+/**
+ * Setup lightbox for info image (separate from gallery lightbox)
+ */
+function setupInfoLightbox(infoImg) {
+    infoImg.classList.add('interactive');
+    infoImg.style.cursor = 'pointer';
+    
+    infoImg.addEventListener('click', () => {
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImage = document.getElementById('lightbox-image');
+        const lightboxNav = document.querySelector('.lightbox-nav');
+        
+        // Hide navigation arrows for info image
+        if (lightboxNav) lightboxNav.style.display = 'none';
+        
+        lightboxImage.src = infoImg.src;
+        lightbox.classList.remove('hidden');
+        
+        // Store flag to know we're viewing info, not gallery
+        lightbox.dataset.viewingInfo = 'true';
+    });
 }
 
 function setupExtraButton() {
@@ -281,11 +328,28 @@ function setupExtraButton() {
 // ---------------------------------------------------------------------------
 
 function setupEventListeners() {
-    document.querySelector('.btn-home').addEventListener('click', () => {
-        window.location.href = 'index.html';
-    });
+    const homeBtn = document.querySelector('.btn-home');
+    
+    // For albums, change to back button that goes to family archive
+    if (currentType === 'album') {
+        homeBtn.src = 'data/assets/buttons/back.webp';
+        homeBtn.alt = 'Back';
+        homeBtn.addEventListener('click', () => {
+            window.location.href = 'familyArchive.html';
+        });
+    } else {
+        homeBtn.addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+    }
 
-    // Extra button behavior to be implemented separately
+    // Extra button navigation
+    const extraBtn = document.querySelector('.btn-extra');
+    if (extraBtn && hasExtra()) {
+        extraBtn.addEventListener('click', () => {
+            window.location.href = `extra.html?slug=${currentSlug}`;
+        });
+    }
 
     // Lightbox controls
     document.querySelector('.lightbox-close').addEventListener('click', closeLightbox);

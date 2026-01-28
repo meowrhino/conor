@@ -120,7 +120,16 @@ function showPasswordScreen(project) {
             feedback.classList.remove('hidden');
             setTimeout(() => goToProject('project', project.slug), 1000);
         } else {
-            feedback.src = 'data/assets/password/wrong.webp';
+            // Show project-specific hint if available, otherwise show generic wrong
+            const hintPath = `data/projects/${project.slug}/hint.webp`;
+            feedback.src = hintPath;
+            
+            // Fallback to generic wrong if hint doesn't exist
+            feedback.onerror = () => {
+                feedback.onerror = null;
+                feedback.src = 'data/assets/password/wrong.webp';
+            };
+            
             feedback.classList.remove('hidden');
             setTimeout(() => {
                 feedback.classList.add('hidden');
@@ -155,11 +164,9 @@ function setupEventListeners() {
         setHomeState(false);
     });
 
-    // Show family archive sub-screen
+    // Navigate to family archive page
     document.getElementById('family-archive-link').addEventListener('click', () => {
-        document.getElementById('main-menu').classList.add('hidden');
-        document.getElementById('family-archive-screen').classList.remove('hidden');
-        setHomeState(false);
+        window.location.href = 'familyArchive.html';
     });
 
     // Home buttons — return to main menu

@@ -37,7 +37,72 @@ async function init() {
     });
 
     setupNoiseCanvas();
+    loadBioImages();
     setupEventListeners();
+}
+
+/**
+ * Load bio images from data/bio/me/ and make them clickable for lightbox
+ */
+function loadBioImages() {
+    const bioImagesContainer = document.getElementById('bio-images');
+    const bioImagePaths = ['data/bio/me/1.webp', 'data/bio/me/2.webp'];
+    
+    bioImagePaths.forEach((path, index) => {
+        const img = document.createElement('img');
+        img.src = path;
+        img.alt = `Bio ${index + 1}`;
+        img.className = 'bio-me-image interactive';
+        img.addEventListener('click', () => openBioLightbox(path));
+        bioImagesContainer.appendChild(img);
+    });
+}
+
+/**
+ * Open lightbox for bio images
+ */
+function openBioLightbox(imagePath) {
+    // Create lightbox if it doesn't exist
+    let lightbox = document.getElementById('bio-lightbox');
+    
+    if (!lightbox) {
+        lightbox = document.createElement('div');
+        lightbox.id = 'bio-lightbox';
+        lightbox.className = 'lightbox hidden';
+        
+        const img = document.createElement('img');
+        img.id = 'bio-lightbox-image';
+        img.alt = 'Bio';
+        
+        const closeBtn = document.createElement('img');
+        closeBtn.src = 'data/assets/buttons/back.webp';
+        closeBtn.alt = 'Close';
+        closeBtn.className = 'lightbox-close interactive interactive--lg';
+        closeBtn.addEventListener('click', closeBioLightbox);
+        
+        lightbox.appendChild(img);
+        lightbox.appendChild(closeBtn);
+        document.body.appendChild(lightbox);
+        
+        // Close on click outside
+        lightbox.addEventListener('click', (e) => {
+            if (e.target.id === 'bio-lightbox') closeBioLightbox();
+        });
+        
+        // Close on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) {
+                closeBioLightbox();
+            }
+        });
+    }
+    
+    document.getElementById('bio-lightbox-image').src = imagePath;
+    lightbox.classList.remove('hidden');
+}
+
+function closeBioLightbox() {
+    document.getElementById('bio-lightbox').classList.add('hidden');
 }
 
 function setupEventListeners() {

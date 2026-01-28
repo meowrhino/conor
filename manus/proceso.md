@@ -872,3 +872,243 @@ Los álbumes del family archive tenían imágenes con nombres de timestamp del e
 - `project.js` — Álbumes usan secuencia numérica, eliminada dependencia de `albums.json`
 - `data/familyArchive/ashlee/*/` — 877 imágenes renombradas a secuencia numérica
 - `data/familyArchive/ashlee/albums.json` — Ya no es necesario (puede eliminarse)
+
+
+---
+
+## 28 de enero de 2026, 07:00 GMT+1
+
+### Implementación de múltiples mejoras: Fondo, Family Archive, Extras, Hints y Bio
+
+#### Sinopsis
+
+Se han implementado siete cambios importantes en el portfolio de Conor, mejorando la experiencia visual, la navegación y añadiendo nuevas funcionalidades para contenido extra y bio personal.
+
+#### Cambios implementados
+
+**1. Nuevo fondo con imagen blackGlitch.webp**
+
+Se ha reemplazado el fondo CSS con grid pattern por una imagen de fondo fija (`data/background/blackGlitch.webp`). El efecto de noise se mantiene aplicado sobre la imagen.
+
+**Modificaciones en `style.css`:**
+```css
+body {
+    background-color: #000;
+    background-image: url('data/background/blackGlitch.webp');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+```
+
+**2. Info.webp en Family Albums con lightbox**
+
+Se ha extendido la funcionalidad de `info.webp` (que ya existía en proyectos) a los family albums. Las imágenes info ahora son clickeables y se abren en un lightbox independiente de la galería.
+
+**Modificaciones en `project.js`:**
+- Función `setupInfoImage()` actualizada para detectar el tipo de contenido (project/album/commission)
+- Nueva función `setupInfoLightbox()` que hace las imágenes info clickeables
+- Modificación de `closeLightbox()` para restaurar la navegación del lightbox
+- Modificación de `navigateLightbox()` para prevenir navegación cuando se visualiza info
+
+**Características:**
+- Las imágenes info tienen opacidad 0.85 y hover a 1 (clase `interactive`)
+- Al hacer click en info, se abre en lightbox sin flechas de navegación
+- El lightbox usa un flag `dataset.viewingInfo` para distinguir entre galería e info
+- Al cerrar, se restaura la funcionalidad normal del lightbox de galería
+
+**3. Family Archive como página independiente**
+
+Se ha refactorizado Family Archive para que sea una página independiente en lugar de un overlay dentro de index.html. Esto mejora la navegación y permite usar botones "back" en los albums.
+
+**Archivos nuevos:**
+- `familyArchive.html`: Página independiente con la lista de albums
+- `familyArchive.js`: Lógica para cargar y mostrar albums
+
+**Modificaciones:**
+- `home.js`: El enlace de Family Archive ahora redirige a `familyArchive.html`
+- `project.js`: Los albums ahora muestran botón "back" en lugar de "home", que redirige a `familyArchive.html`
+
+**Flujo de navegación actualizado:**
+```
+index.html → familyArchive.html → project.html?type=album&slug=...
+                                        ↓ (botón back)
+                                   familyArchive.html
+```
+
+**4. Página de extras con scroll horizontal**
+
+Se ha creado un sistema completo para mostrar contenido "extra" de proyectos mediante un scroll horizontal de imágenes. Los proyectos con `extra: "true"` en data.json tienen acceso a esta funcionalidad.
+
+**Archivos nuevos:**
+- `extra.html`: Página con scroll horizontal
+- `extra.js`: Lógica para cargar y mostrar imágenes extra
+
+**Características:**
+- Detección automática del número de imágenes en la carpeta `extra/`
+- Preloader con barra de progreso
+- Scroll horizontal suave con imágenes a 70vh de altura
+- Botón "back" que vuelve al proyecto de origen
+- Scrollbar personalizado con estilo semi-transparente
+
+**Estructura de carpetas:**
+```
+data/projects/{slug}/extra/
+  ├── 1.webp
+  ├── 2.webp
+  └── ...
+```
+
+**Modificaciones en `project.js`:**
+- El botón "3Dots" ahora redirige a `extra.html?slug={projectSlug}`
+
+**Estilos CSS añadidos:**
+```css
+.extra-scroll {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    height: 80vh;
+    scroll-behavior: smooth;
+}
+
+.extra-image {
+    height: 70vh;
+    opacity: 0.85;
+    transition: opacity 0.3s ease;
+}
+```
+
+**5. Hint.webp para contraseñas incorrectas**
+
+Se ha implementado un sistema de hints personalizados por proyecto para cuando el usuario falla la contraseña. En lugar de mostrar siempre "wrong.webp", ahora se muestra `hint.webp` específico del proyecto.
+
+**Modificaciones en `home.js`:**
+- La función `checkPassword()` ahora intenta cargar `data/projects/{slug}/hint.webp`
+- Si el hint no existe, hace fallback a `data/assets/password/wrong.webp`
+- Implementado con `img.onerror` para el fallback automático
+
+**Flujo:**
+```
+Password incorrecta → Intenta cargar hint.webp del proyecto
+                   → Si no existe → Muestra wrong.webp genérico
+```
+
+**6. Sección bio con imágenes e Instagram en About**
+
+Se ha añadido una nueva sección en la página About que muestra imágenes personales de `data/bio/me/` y un botón para Instagram.
+
+**Modificaciones en `about.html`:**
+- Nueva sección `.bio-section` con contenedor de imágenes y enlace a Instagram
+- Estructura HTML para imágenes dinámicas y botón IG
+
+**Modificaciones en `about.js`:**
+- Nueva función `loadBioImages()` que carga las imágenes de `data/bio/me/`
+- Nueva función `openBioLightbox()` que crea un lightbox específico para bio
+- Las imágenes son clickeables con clase `interactive`
+- Lightbox se crea dinámicamente la primera vez que se usa
+- Soporte para cerrar con click fuera o tecla Escape
+
+**Estilos CSS añadidos:**
+```css
+.bio-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 1rem;
+}
+
+.bio-me-image {
+    max-width: 120px;
+    opacity: 0.85;
+    cursor: pointer;
+}
+
+.ig-button {
+    max-width: 80px;
+}
+```
+
+**Enlace Instagram:**
+- URL: `https://www.instagram.com/conor_ashlee/`
+- Se abre en nueva pestaña (`target="_blank"`)
+- Usa `rel="noopener noreferrer"` para seguridad
+
+**7. Estilos y ajustes generales**
+
+Se han añadido múltiples estilos CSS para soportar todas las nuevas funcionalidades:
+- Estilos para scroll horizontal de extras
+- Estilos para sección bio e Instagram
+- Ajustes de opacidad y hover consistentes con el resto del sitio
+
+#### Estructura de archivos actualizada
+
+```
+conor/
+├── index.html              (menú principal)
+├── familyArchive.html      (nueva página independiente)
+├── familyArchive.js        (nueva lógica para family archive)
+├── extra.html              (nueva página para extras)
+├── extra.js                (nueva lógica para scroll horizontal)
+├── project.html            (galería de proyectos/albums/commissions)
+├── project.js              (modificado: info en albums, navegación back)
+├── about.html              (modificado: sección bio añadida)
+├── about.js                (modificado: carga de bio images + lightbox)
+├── home.js                 (modificado: hints de password)
+├── style.css               (modificado: nuevos estilos para todas las features)
+└── data/
+    ├── background/
+    │   └── blackGlitch.webp
+    ├── projects/
+    │   ├── belladona/
+    │   │   └── extra/       (18 imágenes para prueba)
+    │   └── buttercup/
+    │       └── hint.webp    (hint personalizado)
+    └── bio/
+        └── me/              (2 imágenes personales)
+```
+
+#### Características técnicas destacadas
+
+**Modularidad:**
+- Cada funcionalidad está bien separada en su propia función
+- Los lightboxes de galería, info y bio son independientes
+- El código es fácil de mantener y extender
+
+**Reutilización de código:**
+- Los estilos `.interactive` se aplican consistentemente
+- El sistema de lightbox se reutiliza con diferentes configuraciones
+- Las convenciones de rutas se mantienen coherentes
+
+**Experiencia de usuario:**
+- Navegación intuitiva con botones "back" contextuales
+- Feedback visual consistente (opacidad, hover)
+- Carga progresiva con preloader
+- Scroll suave y natural
+
+**Fallbacks:**
+- Hint de password con fallback a wrong.webp genérico
+- Detección automática de número de imágenes en extras
+- Manejo de errores en carga de imágenes
+
+#### Testing pendiente
+
+Antes del push final, se recomienda verificar:
+1. ✅ Fondo blackGlitch.webp se muestra correctamente
+2. ✅ Info.webp en family albums es clickeable y abre lightbox
+3. ✅ Family Archive tiene su propia página y navegación funciona
+4. ✅ Botón "back" en albums lleva a familyArchive.html
+5. ✅ Extras de belladona se muestran en scroll horizontal
+6. ✅ Botón back en extras vuelve al proyecto
+7. ✅ Hint.webp se muestra al fallar password en buttercup
+8. ✅ Imágenes de bio/me aparecen en about
+9. ✅ Botón Instagram abre en nueva pestaña
+10. ✅ Lightbox de bio funciona correctamente
+
+#### Próximos pasos
+
+- Hacer commit de todos los cambios con mensaje descriptivo
+- Push al repositorio
+- Testing en navegador real
+- Ajustes finales si es necesario
