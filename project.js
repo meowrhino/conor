@@ -292,21 +292,32 @@ function setupInfoImage() {
     const infoImg = document.getElementById('project-info-image');
     if (!infoImg) return;
 
-    // Projects: load from projects folder
-    if (currentType === 'project') {
-        infoImg.src = `data/projects/${currentSlug}/info.webp`;
-        infoImg.classList.remove('hidden');
-        setupInfoLightbox(infoImg);
-        if (window.setupFadeOnLoad) window.setupFadeOnLoad();
-    }
-    // Albums: load from family archive folder
-    else if (currentType === 'album') {
-        infoImg.src = `data/familyArchive/${currentProject.archiveSlug}/${currentProject.slug}/info.webp`;
-        infoImg.classList.remove('hidden');
-        setupInfoLightbox(infoImg);
-        if (window.setupFadeOnLoad) window.setupFadeOnLoad();
-    }
     // Commissions: keep info hidden (already has class hidden)
+    if (currentType !== 'project' && currentType !== 'album') return;
+
+    const infoSrc = currentType === 'project'
+        ? `data/projects/${currentSlug}/info.webp`
+        : `data/familyArchive/${currentProject.archiveSlug}/${currentProject.slug}/info.webp`;
+
+    // Keep hidden until image is confirmed to exist.
+    infoImg.classList.add('hidden');
+    infoImg.classList.remove('interactive');
+    infoImg.style.cursor = '';
+
+    infoImg.onload = () => {
+        infoImg.classList.remove('hidden');
+        setupInfoLightbox(infoImg);
+        if (window.setupFadeOnLoad) window.setupFadeOnLoad();
+    };
+
+    infoImg.onerror = () => {
+        infoImg.classList.add('hidden');
+        infoImg.classList.remove('interactive');
+        infoImg.style.cursor = '';
+        console.warn(`[project.js] Info image not found: ${infoSrc}`);
+    };
+
+    infoImg.src = infoSrc;
 }
 
 /**

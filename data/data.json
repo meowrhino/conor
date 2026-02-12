@@ -78,6 +78,11 @@
           "imageCount": 60
         },
         {
+          "slug": "1994-95",
+          "title": "1994-95",
+          "imageCount": 25
+        },
+        {
           "slug": "1999_connor",
           "title": "1999 Connor",
           "imageCount": 72
@@ -98,9 +103,24 @@
           "imageCount": 150
         },
         {
+          "slug": "aged_8",
+          "title": "Aged 8",
+          "imageCount": 170
+        },
+        {
+          "slug": "conor_3",
+          "title": "Conor 3",
+          "imageCount": 56
+        },
+        {
           "slug": "house",
           "title": "House",
           "imageCount": 22
+        },
+        {
+          "slug": "lewis",
+          "title": "Lewis",
+          "imageCount": 43
         },
         {
           "slug": "misc",
