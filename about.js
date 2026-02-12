@@ -52,10 +52,7 @@ async function init() {
 function loadCvImages() {
     const cvImagesContainer = document.getElementById('cv-images');
     const cvImagePaths = [
-        'data/bio/cv/1.webp',
-        'data/bio/cv/2.webp',
-        'data/bio/cv/3.webp',
-        'data/bio/cv/4.webp'
+        'data/bio/cv/1.webp'
     ];
 
     cvImagePaths.forEach((path, index) => {
