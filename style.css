@@ -258,12 +258,12 @@ body.is-home .top-left-actions .btn-home {
 }
 
 .password-feedback img {
-    max-width: 200px;
+    max-width: 320px;
     height: auto;
 }
 
 .password-buttons img {
-    max-width: 150px;
+    max-width: 100px;
 }
 
 /* ---------- Preloader (progress bar while images load) ---------- */
