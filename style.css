@@ -429,6 +429,12 @@ body.is-home .top-left-actions .btn-home {
     pointer-events: auto;
 }
 
+/* Keep arrow slot in layout when hidden so right arrow stays on the right side. */
+.lightbox-btn--hidden {
+    visibility: hidden;
+    pointer-events: none;
+}
+
 /* Override inline opacity set by JS at first/last image boundaries */
 .lightbox-btn:hover {
     opacity: 1 !important;

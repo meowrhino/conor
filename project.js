@@ -291,8 +291,8 @@ function updateLightboxButtons() {
     const nextBtn = document.querySelector('.btn-next');
     if (!prevBtn || !nextBtn) return;
 
-    prevBtn.classList.toggle('hidden', currentImageIndex === 0);
-    nextBtn.classList.toggle('hidden', currentImageIndex === images.length - 1);
+    prevBtn.classList.toggle('lightbox-btn--hidden', currentImageIndex === 0);
+    nextBtn.classList.toggle('lightbox-btn--hidden', currentImageIndex === images.length - 1);
 }
 
 // ---------------------------------------------------------------------------

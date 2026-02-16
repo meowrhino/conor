@@ -69,29 +69,38 @@ async function init() {
 }
 
 /**
- * Load CV images from data/bio/cv/ and make them clickable for lightbox
+ * Load profile set (main bio + CV images) and wire them to one shared lightbox set.
  */
 function loadCvImages() {
     const cvImagesContainer = document.getElementById('cv-images');
+    const mainBioPath = 'data/bio/bio.webp';
     const cvImagePaths = [
         'data/bio/cv/1.webp'
     ];
+    profileImages = [mainBioPath, ...cvImagePaths];
+
+    const mainBioImage = document.querySelector('.bio-image');
+    if (mainBioImage) {
+        mainBioImage.style.cursor = 'pointer';
+        mainBioImage.addEventListener('click', () => openBioLightbox(mainBioPath, profileImages));
+    }
 
     cvImagePaths.forEach((path, index) => {
-        allImages.push(path);
         const img = document.createElement('img');
         img.src = path;
         img.alt = `CV ${index + 1}`;
         img.className = 'cv-image fade-on-load';
-        img.addEventListener('click', () => openBioLightbox(path));
+        img.addEventListener('click', () => openBioLightbox(path, profileImages));
         cvImagesContainer.appendChild(img);
     });
 
     if (window.setupFadeOnLoad) window.setupFadeOnLoad();
 }
 
-/** All lightbox-able image paths (cv + bio) collected at load time */
-let allImages = [];
+/** Separate sets so profile (bio+cv) and bio-strip do not mix in navigation */
+let profileImages = [];
+let bioImages = [];
+let currentImageSet = [];
 let currentIndex = 0;
 
 /**
@@ -100,15 +109,16 @@ let currentIndex = 0;
  */
 function loadBioImages(count) {
     const bioImagesContainer = document.getElementById('bio-images');
+    bioImages = [];
 
     for (let i = 1; i <= count; i++) {
         const path = `data/bio/me/${i}.webp`;
-        allImages.push(path);
+        bioImages.push(path);
         const img = document.createElement('img');
         img.src = path;
         img.alt = `Bio ${i}`;
         img.className = 'bio-me-image fade-on-load';
-        img.addEventListener('click', () => openBioLightbox(path));
+        img.addEventListener('click', () => openBioLightbox(path, bioImages));
         bioImagesContainer.appendChild(img);
     }
 
@@ -175,11 +185,13 @@ function createBioLightbox() {
     return lightbox;
 }
 
-function openBioLightbox(imagePath) {
+function openBioLightbox(imagePath, imageSet) {
     let lightbox = document.getElementById('bio-lightbox');
     if (!lightbox) lightbox = createBioLightbox();
 
-    currentIndex = allImages.indexOf(imagePath);
+    currentImageSet = Array.isArray(imageSet) ? imageSet : [];
+    currentIndex = currentImageSet.indexOf(imagePath);
+    if (currentIndex < 0) currentIndex = 0;
     document.getElementById('bio-lightbox-image').src = imagePath;
     updateBioLightboxButtons();
     lightbox.classList.remove('hidden');
@@ -190,10 +202,11 @@ function closeBioLightbox() {
 }
 
 function navigateBioLightbox(direction) {
+    if (!currentImageSet.length) return;
     const nextIndex = currentIndex + direction;
-    if (nextIndex < 0 || nextIndex >= allImages.length) return;
+    if (nextIndex < 0 || nextIndex >= currentImageSet.length) return;
     currentIndex = nextIndex;
-    document.getElementById('bio-lightbox-image').src = allImages[currentIndex];
+    document.getElementById('bio-lightbox-image').src = currentImageSet[currentIndex];
     updateBioLightboxButtons();
 }
 
@@ -204,8 +217,16 @@ function updateBioLightboxButtons() {
     const btns = lightbox.querySelectorAll('.lightbox-btn');
     if (btns.length < 2) return;
 
-    btns[0].classList.toggle('hidden', currentIndex === 0);
-    btns[1].classList.toggle('hidden', currentIndex === allImages.length - 1);
+    const lastIndex = currentImageSet.length - 1;
+    const hideBoth = currentImageSet.length <= 1;
+    if (hideBoth) {
+        btns[0].classList.add('lightbox-btn--hidden');
+        btns[1].classList.add('lightbox-btn--hidden');
+        return;
+    }
+
+    btns[0].classList.toggle('lightbox-btn--hidden', currentIndex === 0);
+    btns[1].classList.toggle('lightbox-btn--hidden', currentIndex === lastIndex);
 }
 
 function setupEventListeners() {
