@@ -4,6 +4,8 @@
  * Displays a horizontal scrolling gallery of all commission images.
  * Images loaded from: data/commission/{slug}/{n}.webp
  * Image count from: data.json commissions[].imageCount
+ *
+ * Auto-scrolls slowly in a seamless loop. Pauses on hover, resumes on leave.
  */
 
 // ---------------------------------------------------------------------------
@@ -26,9 +28,6 @@ async function init() {
 // Image loading
 // ---------------------------------------------------------------------------
 
-/**
- * Load all commission images using imageCount from data.json
- */
 async function loadCommissionImages() {
     const response = await fetch('data/data.json');
     const appData = await response.json();
@@ -39,7 +38,6 @@ async function loadCommissionImages() {
         return;
     }
 
-    // Build images array from each commission using imageCount
     for (const commission of appData.commissions) {
         if (!commission.imageCount || commission.imageCount <= 0) {
             console.warn(`[commission.js] Commission "${commission.slug}" has no imageCount, skipping`);
@@ -69,38 +67,65 @@ async function loadCommissionImages() {
     renderHorizontalScroll();
 }
 
-// Note: preloadImages() removed — using progressive loading with fade-on-load class
-
 // ---------------------------------------------------------------------------
 // Horizontal scroll rendering
 // ---------------------------------------------------------------------------
 
 /**
- * Render images in a horizontal scrolling container
- * Groups images by commission with extra spacing between groups
+ * Render images inside two identical inner wrappers (A + B) so the
+ * auto-scroll can loop seamlessly: when A scrolls fully out of view
+ * we jump back by exactly one wrapper width.
  */
 function renderHorizontalScroll() {
     const scrollContainer = document.getElementById('commission-scroll');
     scrollContainer.innerHTML = '';
 
-    images.forEach((commission, commissionIndex) => {
-        // Create a group container for each commission
-        const group = document.createElement('div');
-        group.className = 'commission-group';
+    function buildSet() {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'commission-set';
 
-        commission.images.forEach((src, imgIndex) => {
-            const img = document.createElement('img');
-            img.alt = `${commission.slug} ${imgIndex + 1}`;
-            img.className = 'commission-image fade-on-load';
-            img.addEventListener('click', () => openLightbox(src));
-            img.src = src;
-            group.appendChild(img);
+        images.forEach((commission) => {
+            const group = document.createElement('div');
+            group.className = 'commission-group';
+
+            commission.images.forEach((src, imgIndex) => {
+                const img = document.createElement('img');
+                img.alt = `${commission.slug} ${imgIndex + 1}`;
+                img.className = 'commission-image fade-on-load';
+                img.addEventListener('click', () => openLightbox(src));
+                img.src = src;
+                group.appendChild(img);
+            });
+
+            wrapper.appendChild(group);
         });
 
-        scrollContainer.appendChild(group);
-    });
+        return wrapper;
+    }
+
+    const setA = buildSet();
+    const setB = buildSet();
+    scrollContainer.appendChild(setA);
+    scrollContainer.appendChild(setB);
 
     if (window.setupFadeOnLoad) window.setupFadeOnLoad();
+
+    // Start auto-scroll once all images in the first set have loaded
+    // so we can measure the correct width.
+    const allImgs = setA.querySelectorAll('img');
+    let loaded = 0;
+    const total = allImgs.length;
+
+    function onImgReady() {
+        loaded++;
+        if (loaded >= total) setupAutoScroll(setA);
+    }
+
+    allImgs.forEach((img) => {
+        if (img.complete) { onImgReady(); return; }
+        img.addEventListener('load', onImgReady);
+        img.addEventListener('error', onImgReady);
+    });
 }
 
 // ---------------------------------------------------------------------------
@@ -125,20 +150,46 @@ function setupEventListeners() {
         window.location.href = 'index.html';
     });
 
-    // Lightbox controls
     document.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
 
-    // Click outside image to close lightbox
     document.getElementById('lightbox').addEventListener('click', (e) => {
         if (e.target.id === 'lightbox') closeLightbox();
     });
 
-    // Escape key to close lightbox
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && !document.getElementById('lightbox').classList.contains('hidden')) {
             closeLightbox();
         }
     });
+}
+
+// ---------------------------------------------------------------------------
+// Auto-scroll — slow continuous loop, pauses on user interaction
+// ---------------------------------------------------------------------------
+
+function setupAutoScroll(setA) {
+    const container = document.getElementById('commission-scroll');
+    if (!container) return;
+
+    const speed = 0.5;
+    let paused = false;
+    // Width of one full set of images (measured after load)
+    const half = setA.offsetWidth;
+
+    container.addEventListener('mouseenter', () => { paused = true; });
+    container.addEventListener('mouseleave', () => { paused = false; });
+
+    function tick() {
+        if (!paused) {
+            container.scrollLeft += speed;
+            if (container.scrollLeft >= half) {
+                container.scrollLeft -= half;
+            }
+        }
+        requestAnimationFrame(tick);
+    }
+
+    requestAnimationFrame(tick);
 }
 
 // ---------------------------------------------------------------------------

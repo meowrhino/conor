@@ -124,11 +124,8 @@ function showPasswordScreen(project) {
             };
             
             feedback.classList.remove('hidden');
-            setTimeout(() => {
-                feedback.classList.add('hidden');
-                input.value = '';
-                passwordChecking = false;
-            }, 1500);
+            input.value = '';
+            passwordChecking = false;
         }
     };
 

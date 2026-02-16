@@ -42,7 +42,7 @@ async function init() {
 
     setupNoiseCanvas();
     loadCvImages();
-    loadBioImages();
+    loadBioImages(appData.contact.imageCount);
     setupEventListeners();
 }
 
@@ -56,6 +56,7 @@ function loadCvImages() {
     ];
 
     cvImagePaths.forEach((path, index) => {
+        allImages.push(path);
         const img = document.createElement('img');
         img.src = path;
         img.alt = `CV ${index + 1}`;
@@ -67,70 +68,117 @@ function loadCvImages() {
     if (window.setupFadeOnLoad) window.setupFadeOnLoad();
 }
 
-/**
- * Load bio images from data/bio/me/ and make them clickable for lightbox
- */
-function loadBioImages() {
-    const bioImagesContainer = document.getElementById('bio-images');
-    const bioImagePaths = ['data/bio/me/1.webp', 'data/bio/me/2.webp'];
+/** All lightbox-able image paths (cv + bio) collected at load time */
+let allImages = [];
+let currentIndex = 0;
 
-    bioImagePaths.forEach((path, index) => {
+/**
+ * Load bio images from data/bio/me/ and make them clickable for lightbox.
+ * Count is read from data.json contact.imageCount.
+ */
+function loadBioImages(count) {
+    const bioImagesContainer = document.getElementById('bio-images');
+
+    for (let i = 1; i <= count; i++) {
+        const path = `data/bio/me/${i}.webp`;
+        allImages.push(path);
         const img = document.createElement('img');
         img.src = path;
-        img.alt = `Bio ${index + 1}`;
+        img.alt = `Bio ${i}`;
         img.className = 'bio-me-image fade-on-load';
         img.addEventListener('click', () => openBioLightbox(path));
         bioImagesContainer.appendChild(img);
-    });
+    }
 
     if (window.setupFadeOnLoad) window.setupFadeOnLoad();
 }
 
-/**
- * Open lightbox for bio images
- */
+// ---------------------------------------------------------------------------
+// Bio lightbox with prev/next navigation
+// ---------------------------------------------------------------------------
+
+function createBioLightbox() {
+    const lightbox = document.createElement('div');
+    lightbox.id = 'bio-lightbox';
+    lightbox.className = 'lightbox hidden';
+
+    const img = document.createElement('img');
+    img.id = 'bio-lightbox-image';
+    img.alt = 'Bio';
+
+    // Close button
+    const closeBtn = document.createElement('img');
+    closeBtn.src = 'data/assets/buttons/back.webp';
+    closeBtn.alt = 'Close';
+    closeBtn.className = 'lightbox-close interactive interactive--lg';
+    closeBtn.addEventListener('click', closeBioLightbox);
+
+    // Nav arrows
+    const nav = document.createElement('div');
+    nav.className = 'lightbox-nav';
+
+    const prevBtn = document.createElement('img');
+    prevBtn.src = 'data/assets/buttons/arrow_left.webp';
+    prevBtn.alt = 'Previous';
+    prevBtn.className = 'lightbox-btn interactive interactive--lg';
+    prevBtn.addEventListener('click', () => navigateBioLightbox(-1));
+
+    const nextBtn = document.createElement('img');
+    nextBtn.src = 'data/assets/buttons/arrow_right.webp';
+    nextBtn.alt = 'Next';
+    nextBtn.className = 'lightbox-btn interactive interactive--lg';
+    nextBtn.addEventListener('click', () => navigateBioLightbox(1));
+
+    nav.appendChild(prevBtn);
+    nav.appendChild(nextBtn);
+
+    lightbox.appendChild(img);
+    lightbox.appendChild(closeBtn);
+    lightbox.appendChild(nav);
+    document.body.appendChild(lightbox);
+
+    // Close on click outside
+    lightbox.addEventListener('click', (e) => {
+        if (e.target.id === 'bio-lightbox') closeBioLightbox();
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (lightbox.classList.contains('hidden')) return;
+        if (e.key === 'Escape') closeBioLightbox();
+        if (e.key === 'ArrowLeft') navigateBioLightbox(-1);
+        if (e.key === 'ArrowRight') navigateBioLightbox(1);
+    });
+
+    return lightbox;
+}
+
 function openBioLightbox(imagePath) {
-    // Create lightbox if it doesn't exist
     let lightbox = document.getElementById('bio-lightbox');
-    
-    if (!lightbox) {
-        lightbox = document.createElement('div');
-        lightbox.id = 'bio-lightbox';
-        lightbox.className = 'lightbox hidden';
-        
-        const img = document.createElement('img');
-        img.id = 'bio-lightbox-image';
-        img.alt = 'Bio';
-        
-        const closeBtn = document.createElement('img');
-        closeBtn.src = 'data/assets/buttons/back.webp';
-        closeBtn.alt = 'Close';
-        closeBtn.className = 'lightbox-close interactive interactive--lg';
-        closeBtn.addEventListener('click', closeBioLightbox);
-        
-        lightbox.appendChild(img);
-        lightbox.appendChild(closeBtn);
-        document.body.appendChild(lightbox);
-        
-        // Close on click outside
-        lightbox.addEventListener('click', (e) => {
-            if (e.target.id === 'bio-lightbox') closeBioLightbox();
-        });
-        
-        // Close on Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) {
-                closeBioLightbox();
-            }
-        });
-    }
-    
+    if (!lightbox) lightbox = createBioLightbox();
+
+    currentIndex = allImages.indexOf(imagePath);
     document.getElementById('bio-lightbox-image').src = imagePath;
+    updateBioLightboxButtons();
     lightbox.classList.remove('hidden');
 }
 
 function closeBioLightbox() {
     document.getElementById('bio-lightbox').classList.add('hidden');
+}
+
+function navigateBioLightbox(direction) {
+    currentIndex = (currentIndex + direction + allImages.length) % allImages.length;
+    document.getElementById('bio-lightbox-image').src = allImages[currentIndex];
+    updateBioLightboxButtons();
+}
+
+/** Dim prev/next arrows at first/last image */
+function updateBioLightboxButtons() {
+    const lightbox = document.getElementById('bio-lightbox');
+    const btns = lightbox.querySelectorAll('.lightbox-btn');
+    btns[0].style.opacity = currentIndex === 0 ? '0.3' : '';
+    btns[1].style.opacity = currentIndex === allImages.length - 1 ? '0.3' : '';
 }
 
 function setupEventListeners() {

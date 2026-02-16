@@ -1,32 +1,54 @@
 /**
  * gate.js — Mobile device gate
  *
- * Blocks access on mobile/touch devices by showing a full-screen overlay.
+ * Blocks access on mobile/touch devices by showing a full-screen overlay
+ * with a single image (data/assets/phone/phone.webp).
+ * Click the image to expand it; click outside to collapse back.
  * Detection uses viewport width (<768px) and pointer type (coarse = touch).
- * The overlay HTML lives in each page; this script just toggles visibility.
+ * Re-checks on window resize (debounced 300ms).
  */
 (function () {
   const overlay = document.getElementById("device-check-overlay");
-  const msg = document.getElementById("device-check-message");
-  const why = document.getElementById("mobile-check-why-link");
-  const expl = document.getElementById("mobile-check-explanation");
+  const img = document.getElementById("gate-phone-img");
 
-  if (!overlay || !msg || !why || !expl) return;
+  if (!overlay || !img) return;
 
-  const isMobileish =
-    window.matchMedia("(max-width: 768px)").matches ||
-    window.matchMedia("(pointer: coarse)").matches;
+  function isMobileish() {
+    return (
+      window.matchMedia("(max-width: 768px)").matches ||
+      window.matchMedia("(pointer: coarse)").matches
+    );
+  }
 
-  if (!isMobileish) return;
+  function update() {
+    if (isMobileish()) {
+      overlay.classList.remove("hidden");
+    } else {
+      overlay.classList.add("hidden");
+      overlay.classList.remove("gate-expanded");
+    }
+  }
 
-  msg.textContent =
-    "oh no, you are using a phone :( you need a larger device, like a laptop with chrome in order to enter this page";
+  // Initial check
+  update();
 
-  overlay.classList.remove("hidden");
-  why.classList.remove("hidden");
+  // Re-check on resize (debounced 300ms)
+  let resizeTimer;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(update, 300);
+  });
 
-  why.addEventListener("click", (e) => {
-    e.preventDefault();
-    expl.classList.toggle("hidden");
+  // Click image → expand
+  img.addEventListener("click", (e) => {
+    e.stopPropagation();
+    overlay.classList.add("gate-expanded");
+  });
+
+  // Click outside image → collapse
+  overlay.addEventListener("click", (e) => {
+    if (e.target !== img && overlay.classList.contains("gate-expanded")) {
+      overlay.classList.remove("gate-expanded");
+    }
   });
 })();
