@@ -29,8 +29,18 @@ async function init() {
 // ---------------------------------------------------------------------------
 
 async function loadCommissionImages() {
-    const response = await fetch('data/data.json');
-    const appData = await response.json();
+    let appData;
+    try {
+        const response = await fetch('data/data.json');
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status} ${response.statusText}`);
+        }
+        appData = await response.json();
+    } catch (error) {
+        console.error('[commission.js] Failed to load data/data.json. Redirecting to home.', error);
+        window.location.href = 'index.html';
+        return;
+    }
 
     if (!appData.commissions || appData.commissions.length === 0) {
         console.error('[commission.js] No commissions found in data.json');
@@ -72,9 +82,9 @@ async function loadCommissionImages() {
 // ---------------------------------------------------------------------------
 
 /**
- * Render images inside two identical inner wrappers (A + B) so the
- * auto-scroll can loop seamlessly: when A scrolls fully out of view
- * we jump back by exactly one wrapper width.
+ * Render images inside three identical wrappers (A + B + C) and keep
+ * scroll position normalized inside the middle band. This prevents
+ * "running out" of content on fast manual flicks.
  */
 function renderHorizontalScroll() {
     const scrollContainer = document.getElementById('commission-scroll');
@@ -105,20 +115,27 @@ function renderHorizontalScroll() {
 
     const setA = buildSet();
     const setB = buildSet();
+    const setC = buildSet();
     scrollContainer.appendChild(setA);
     scrollContainer.appendChild(setB);
+    scrollContainer.appendChild(setC);
 
     if (window.setupFadeOnLoad) window.setupFadeOnLoad();
 
-    // Start auto-scroll once all images in the first set have loaded
+    // Start auto-scroll once all images in the middle set have loaded
     // so we can measure the correct width.
-    const allImgs = setA.querySelectorAll('img');
+    const allImgs = setB.querySelectorAll('img');
     let loaded = 0;
     const total = allImgs.length;
 
+    if (total === 0) {
+        setupAutoScroll(setB);
+        return;
+    }
+
     function onImgReady() {
         loaded++;
-        if (loaded >= total) setupAutoScroll(setA);
+        if (loaded >= total) setupAutoScroll(setB);
     }
 
     allImgs.forEach((img) => {
@@ -167,24 +184,119 @@ function setupEventListeners() {
 // Auto-scroll — slow continuous loop, pauses on user interaction
 // ---------------------------------------------------------------------------
 
-function setupAutoScroll(setA) {
+function setupAutoScroll(referenceSet) {
     const container = document.getElementById('commission-scroll');
     if (!container) return;
 
-    const speed = 0.5;
+    const speedPxPerSecond = 30;
+    const storageKey = 'commissionScrollPos';
+    const persistDelayMs = 200;
     let paused = false;
-    // Width of one full set of images (measured after load)
-    const half = setA.offsetWidth;
+    let setWidth = referenceSet.offsetWidth;
+    let savedPos = 0;
+    let autoWrite = false;
+    let lastTs = 0;
+    let persistTimer = null;
+
+    function normalizeOffset(value) {
+        if (setWidth <= 0) return 0;
+        return ((value % setWidth) + setWidth) % setWidth;
+    }
+
+    function normalizeToMiddleBand(value) {
+        if (setWidth <= 0) return 0;
+        return setWidth + normalizeOffset(value - setWidth);
+    }
+
+    function setScrollSafely(value) {
+        autoWrite = true;
+        container.scrollLeft = value;
+        autoWrite = false;
+    }
+
+    function persistPosition() {
+        try {
+            localStorage.setItem(storageKey, String(savedPos));
+        } catch {
+            // Ignore storage errors (private mode / blocked storage).
+        }
+    }
+
+    function schedulePersist() {
+        if (persistTimer) clearTimeout(persistTimer);
+        persistTimer = setTimeout(() => {
+            persistTimer = null;
+            persistPosition();
+        }, persistDelayMs);
+    }
+
+    try {
+        const stored = localStorage.getItem(storageKey);
+        const parsed = Number(stored);
+        if (Number.isFinite(parsed)) savedPos = parsed;
+    } catch {
+        // Ignore storage errors (private mode / blocked storage).
+    }
+
+    function syncFromCurrentScroll() {
+        if (setWidth <= 0) return;
+        const normalized = normalizeToMiddleBand(container.scrollLeft);
+        if (Math.abs(normalized - container.scrollLeft) > 1) {
+            setScrollSafely(normalized);
+        }
+        savedPos = normalizeOffset(normalized - setWidth);
+    }
+
+    savedPos = normalizeOffset(savedPos);
+    if (setWidth > 0) {
+        setScrollSafely(setWidth + savedPos);
+    }
 
     container.addEventListener('mouseenter', () => { paused = true; });
     container.addEventListener('mouseleave', () => { paused = false; });
+    container.addEventListener('scroll', () => {
+        if (autoWrite || setWidth <= 0) return;
+        syncFromCurrentScroll();
+        schedulePersist();
+    }, { passive: true });
 
-    function tick() {
-        if (!paused) {
-            container.scrollLeft += speed;
-            if (container.scrollLeft >= half) {
-                container.scrollLeft -= half;
+    window.addEventListener('resize', () => {
+        const prevWidth = setWidth;
+        setWidth = referenceSet.offsetWidth;
+        if (setWidth <= 0) return;
+
+        if (prevWidth > 0) {
+            savedPos = (savedPos / prevWidth) * setWidth;
+        }
+        savedPos = normalizeOffset(savedPos);
+        setScrollSafely(setWidth + savedPos);
+    });
+
+    window.addEventListener('pagehide', () => {
+        if (persistTimer) {
+            clearTimeout(persistTimer);
+            persistTimer = null;
+        }
+        persistPosition();
+    });
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'hidden') {
+            if (persistTimer) {
+                clearTimeout(persistTimer);
+                persistTimer = null;
             }
+            persistPosition();
+        }
+    });
+
+    function tick(ts) {
+        if (!lastTs) lastTs = ts;
+        const deltaSeconds = (ts - lastTs) / 1000;
+        lastTs = ts;
+
+        if (!paused && setWidth > 0) {
+            savedPos = normalizeOffset(savedPos + (speedPxPerSecond * deltaSeconds));
+            setScrollSafely(setWidth + savedPos);
         }
         requestAnimationFrame(tick);
     }

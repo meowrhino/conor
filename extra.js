@@ -42,8 +42,18 @@ async function init() {
  */
 async function loadExtraImages() {
     // Fetch project data
-    const response = await fetch('data/data.json');
-    const appData = await response.json();
+    let appData;
+    try {
+        const response = await fetch('data/data.json');
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status} ${response.statusText}`);
+        }
+        appData = await response.json();
+    } catch (error) {
+        console.error('[extra.js] Failed to load data/data.json. Redirecting to home.', error);
+        window.location.href = 'index.html';
+        return;
+    }
 
     const project = appData.projects.find(p => p.slug === projectSlug);
 

@@ -566,7 +566,7 @@ body.is-home .top-left-actions .btn-home {
     flex-shrink: 0;
     opacity: 0.85;
     transition: opacity 0.3s ease;
-    cursor: pointer;
+    cursor: default;
 }
 
 .extra-image:hover {

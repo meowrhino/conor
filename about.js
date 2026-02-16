@@ -8,22 +8,44 @@
  */
 
 async function init() {
-    const response = await fetch('data/data.json');
-    const appData = await response.json();
+    let appData;
+    try {
+        const response = await fetch('data/data.json');
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status} ${response.statusText}`);
+        }
+        appData = await response.json();
+    } catch (error) {
+        console.error('[about.js] Failed to load data/data.json. Using fallback contact values.', error);
+        appData = { contact: {} };
+    }
 
     // Wire up contact links from data.json
     const emailLink = document.getElementById('email-link');
     const phoneCopy = document.getElementById('phone-copy');
     const instagramLink = document.getElementById('instagram-link');
-    const phoneNumber = appData.contact.phone;
+    const phoneNumber = appData.contact.phone || '';
 
-    emailLink.href = `mailto:${appData.contact.email}`;
-    instagramLink.href = `https://www.instagram.com/${appData.contact.instagram}/`;
-    instagramLink.target = '_blank';
-    instagramLink.rel = 'noopener noreferrer';
+    if (appData.contact.email) {
+        emailLink.href = `mailto:${appData.contact.email}`;
+    } else {
+        console.warn('[about.js] Missing contact.email in data.json');
+    }
+
+    if (appData.contact.instagram) {
+        instagramLink.href = `https://www.instagram.com/${appData.contact.instagram}/`;
+        instagramLink.target = '_blank';
+        instagramLink.rel = 'noopener noreferrer';
+    } else {
+        console.warn('[about.js] Missing contact.instagram in data.json');
+    }
 
     // Copy phone number to clipboard on click
     phoneCopy.addEventListener('click', async () => {
+        if (!phoneNumber) {
+            console.warn('[about.js] Missing contact.phone in data.json');
+            return;
+        }
         try {
             await navigator.clipboard.writeText(phoneNumber);
         } catch {
@@ -42,7 +64,7 @@ async function init() {
 
     setupNoiseCanvas();
     loadCvImages();
-    loadBioImages(appData.contact.imageCount);
+    loadBioImages(appData.contact.imageCount || 0);
     setupEventListeners();
 }
 
@@ -168,17 +190,22 @@ function closeBioLightbox() {
 }
 
 function navigateBioLightbox(direction) {
-    currentIndex = (currentIndex + direction + allImages.length) % allImages.length;
+    const nextIndex = currentIndex + direction;
+    if (nextIndex < 0 || nextIndex >= allImages.length) return;
+    currentIndex = nextIndex;
     document.getElementById('bio-lightbox-image').src = allImages[currentIndex];
     updateBioLightboxButtons();
 }
 
-/** Dim prev/next arrows at first/last image */
+/** Hide prev/next arrows at first/last image */
 function updateBioLightboxButtons() {
     const lightbox = document.getElementById('bio-lightbox');
+    if (!lightbox) return;
     const btns = lightbox.querySelectorAll('.lightbox-btn');
-    btns[0].style.opacity = currentIndex === 0 ? '0.3' : '';
-    btns[1].style.opacity = currentIndex === allImages.length - 1 ? '0.3' : '';
+    if (btns.length < 2) return;
+
+    btns[0].classList.toggle('hidden', currentIndex === 0);
+    btns[1].classList.toggle('hidden', currentIndex === allImages.length - 1);
 }
 
 function setupEventListeners() {

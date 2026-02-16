@@ -18,8 +18,16 @@ let appData = null;
 // ---------------------------------------------------------------------------
 
 async function init() {
-    const response = await fetch('data/data.json');
-    appData = await response.json();
+    try {
+        const response = await fetch('data/data.json');
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status} ${response.statusText}`);
+        }
+        appData = await response.json();
+    } catch (error) {
+        console.error('[home.js] Failed to load data/data.json. Main menu cannot be built.', error);
+        return;
+    }
 
     setupNoiseCanvas();
     populateMenu();

@@ -29,8 +29,17 @@ let currentImageIndex = 0;
 // ---------------------------------------------------------------------------
 
 async function init() {
-    const response = await fetch('data/data.json');
-    appData = await response.json();
+    try {
+        const response = await fetch('data/data.json');
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status} ${response.statusText}`);
+        }
+        appData = await response.json();
+    } catch (error) {
+        console.error('[project.js] Failed to load data/data.json. Redirecting to home.', error);
+        window.location.href = 'index.html';
+        return;
+    }
 
     const params = new URLSearchParams(window.location.search);
     currentType = params.get('type');
@@ -261,22 +270,29 @@ function closeLightbox() {
     delete lightbox.dataset.viewingInfo;
 }
 
-/** Navigate with wrapping via modulo arithmetic */
+/** Navigate without wrapping (stop at first/last image) */
 function navigateLightbox(direction) {
     const lightbox = document.getElementById('lightbox');
     
     // Don't navigate if viewing info image
     if (lightbox.dataset.viewingInfo === 'true') return;
-    
-    currentImageIndex = (currentImageIndex + direction + images.length) % images.length;
+
+    const nextIndex = currentImageIndex + direction;
+    if (nextIndex < 0 || nextIndex >= images.length) return;
+
+    currentImageIndex = nextIndex;
     document.getElementById('lightbox-image').src = images[currentImageIndex];
     updateLightboxButtons();
 }
 
-/** Dim prev/next arrows at first/last image as visual hint */
+/** Hide prev/next arrows at first/last image */
 function updateLightboxButtons() {
-    document.querySelector('.btn-prev').style.opacity = currentImageIndex === 0 ? '0.3' : '';
-    document.querySelector('.btn-next').style.opacity = currentImageIndex === images.length - 1 ? '0.3' : '';
+    const prevBtn = document.querySelector('.btn-prev');
+    const nextBtn = document.querySelector('.btn-next');
+    if (!prevBtn || !nextBtn) return;
+
+    prevBtn.classList.toggle('hidden', currentImageIndex === 0);
+    nextBtn.classList.toggle('hidden', currentImageIndex === images.length - 1);
 }
 
 // ---------------------------------------------------------------------------
