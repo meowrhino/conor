@@ -44,7 +44,7 @@ Edit `data/data.json`:
 - `about`: bio/CV image configuration
 - `projects`: project list, titles, counts, optional password, optional extras
 - `commissions`: commission list and image counts
-- `familyArchive`: archive albums and image counts
+- `familyArchive`: `basePath` + direct albums list and image counts
 
 ## 5) Add a new project
 
@@ -85,17 +85,18 @@ Example:
 
 ## 8) Add an album to Family Archive
 
-1. Create folder `data/familyArchive/<archiveSlug>/<albumSlug>/`.
-2. Add:
+1. Keep `familyArchive.basePath` in `data/data.json` (currently `ashlee`).
+2. Create folder `data/familyArchive/<basePath>/<albumSlug>/`.
+3. Add:
    - `1.webp`, `2.webp`, ...
    - `title.webp`
    - `info.webp`
-3. Add album entry in `data/data.json` under `familyArchive[].albums`.
+4. Add album entry in `data/data.json` under `familyArchive.albums`.
 
 Important:
 
-- Current `familyArchive.js` renders only the first item in `familyArchive`.
-- If you plan multiple top-level archives, code changes are needed.
+- Public album URLs now use direct slugs (example: `project.html?type=album&slug=1989`).
+- Physical files remain under `data/familyArchive/<basePath>/<albumSlug>/`.
 
 ## 9) SEO notes
 

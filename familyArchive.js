@@ -2,7 +2,7 @@
  * familyArchive.js — Family Archive page logic for familyArchive.html
  *
  * Loads data.json and populates album links for the family archive.
- * Each album navigates to project.html?type=album&slug={archiveSlug}/{albumSlug}
+ * Each album navigates to project.html?type=album&slug={albumSlug}
  */
 
 let appData = null;
@@ -33,22 +33,39 @@ async function init() {
 // Album population
 // ---------------------------------------------------------------------------
 
+function getFamilyArchiveConfig() {
+    const fallbackBasePath = 'ashlee';
+
+    // New shape: { basePath, albums: [...] }
+    if (appData.familyArchive && !Array.isArray(appData.familyArchive)) {
+        return {
+            basePath: appData.familyArchive.basePath || fallbackBasePath,
+            albums: Array.isArray(appData.familyArchive.albums) ? appData.familyArchive.albums : []
+        };
+    }
+
+    // Legacy shape (kept for compatibility): [{ slug, albums: [...] }]
+    if (Array.isArray(appData.familyArchive) && appData.familyArchive.length > 0) {
+        const archive = appData.familyArchive[0];
+        return {
+            basePath: archive.slug || fallbackBasePath,
+            albums: Array.isArray(archive.albums) ? archive.albums : []
+        };
+    }
+
+    return { basePath: fallbackBasePath, albums: [] };
+}
+
 function populateAlbums() {
     const albumsContainer = document.getElementById('family-archive-albums');
+    const archiveConfig = getFamilyArchiveConfig();
 
-    if (!appData.familyArchive || appData.familyArchive.length === 0) {
-        console.error('[familyArchive.js] No familyArchive found in data.json');
+    if (!archiveConfig.albums.length) {
+        console.error('[familyArchive.js] No albums found in familyArchive config');
         return;
     }
 
-    const archive = appData.familyArchive[0];
-
-    if (!archive.albums || archive.albums.length === 0) {
-        console.error(`[familyArchive.js] No albums found in archive: ${archive.slug}`);
-        return;
-    }
-
-    archive.albums.forEach(album => {
+    archiveConfig.albums.forEach(album => {
         if (!album.imageCount || album.imageCount <= 0) {
             console.warn(`[familyArchive.js] Album "${album.slug}" has no imageCount, skipping`);
             return;
@@ -56,9 +73,9 @@ function populateAlbums() {
 
         const img = document.createElement('img');
         img.className = 'interactive fade-on-load';
-        img.src = `data/familyArchive/${archive.slug}/${album.slug}/title.webp`;
+        img.src = `data/familyArchive/${archiveConfig.basePath}/${album.slug}/title.webp`;
         img.alt = album.title;
-        img.addEventListener('click', () => goToAlbum(archive.slug, album.slug));
+        img.addEventListener('click', () => goToAlbum(album.slug));
         albumsContainer.appendChild(img);
     });
 
@@ -69,8 +86,8 @@ function populateAlbums() {
 // Navigation
 // ---------------------------------------------------------------------------
 
-function goToAlbum(archiveSlug, albumSlug) {
-    window.location.href = `project.html?type=album&slug=${archiveSlug}/${albumSlug}`;
+function goToAlbum(albumSlug) {
+    window.location.href = `project.html?type=album&slug=${encodeURIComponent(albumSlug)}`;
 }
 
 function setupEventListeners() {

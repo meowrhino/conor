@@ -4,7 +4,7 @@
  * Handles three content types via URL params (?type=...&slug=...):
  *   - project:    images from data/projects/{slug}/img/{n}.webp
  *   - commission: images from data/commission/{slug}/{n}.webp
- *   - album:      images from data/familyArchive/{archive}/{album}/{n}.webp
+ *   - album:      images from data/familyArchive/{basePath}/{album}/{n}.webp
  *
  * Flow: load data.json → resolve project → preload all images with progress bar
  *       → render masonry gallery → lightbox on click
@@ -77,6 +77,29 @@ async function loadImageManifest(path) {
     }
 }
 
+function getFamilyArchiveConfig() {
+    const fallbackBasePath = 'ashlee';
+
+    // New shape: { basePath, albums: [...] }
+    if (appData.familyArchive && !Array.isArray(appData.familyArchive)) {
+        return {
+            basePath: appData.familyArchive.basePath || fallbackBasePath,
+            albums: Array.isArray(appData.familyArchive.albums) ? appData.familyArchive.albums : []
+        };
+    }
+
+    // Legacy shape (kept for compatibility): [{ slug, albums: [...] }]
+    if (Array.isArray(appData.familyArchive) && appData.familyArchive.length > 0) {
+        const archive = appData.familyArchive[0];
+        return {
+            basePath: archive.slug || fallbackBasePath,
+            albums: Array.isArray(archive.albums) ? archive.albums : []
+        };
+    }
+
+    return { basePath: fallbackBasePath, albums: [] };
+}
+
 /**
  * Resolve project metadata from data.json based on URL type/slug,
  * then preload images and render the gallery.
@@ -93,17 +116,20 @@ async function loadProject() {
             console.error(`[project.js] Commission not found: ${currentSlug}`);
         }
     } else if (currentType === 'album') {
-        // Album slugs are "archiveSlug/albumSlug"
-        const [archiveSlug, albumSlug] = currentSlug.split('/');
-        const archive = appData.familyArchive.find(a => a.slug === archiveSlug);
-        if (!archive) {
-            console.error(`[project.js] Archive not found: ${archiveSlug}`);
-            window.location.href = 'index.html';
-            return;
+        const archiveConfig = getFamilyArchiveConfig();
+        let archiveBasePath = archiveConfig.basePath;
+        let albumSlug = currentSlug;
+
+        // Backward compatibility: old URLs can still be "archiveSlug/albumSlug".
+        const [legacyArchiveSlug, legacyAlbumSlug] = currentSlug.split('/');
+        if (legacyAlbumSlug) {
+            archiveBasePath = legacyArchiveSlug || archiveBasePath;
+            albumSlug = legacyAlbumSlug;
         }
-        const album = archive.albums.find(a => a.slug === albumSlug);
+
+        const album = archiveConfig.albums.find(a => a.slug === albumSlug);
         if (!album) {
-            console.error(`[project.js] Album not found: ${albumSlug} in archive ${archiveSlug}`);
+            console.error(`[project.js] Album not found: ${albumSlug}`);
             window.location.href = 'index.html';
             return;
         }
@@ -113,7 +139,7 @@ async function loadProject() {
             description: `Family archive: ${album.title}`,
             imageCount: album.imageCount,
             slug: albumSlug,
-            archiveSlug: archiveSlug
+            archiveBasePath: archiveBasePath
         };
     } else {
         console.error(`[project.js] Unknown type: ${currentType}`);
@@ -152,7 +178,7 @@ async function prepareImages() {
     images = [];
 
     if (currentType === 'album') {
-        const basePath = `data/familyArchive/${currentProject.archiveSlug}/${currentProject.slug}/`;
+        const basePath = `data/familyArchive/${currentProject.archiveBasePath}/${currentProject.slug}/`;
         for (let i = 1; i <= currentProject.imageCount; i++) {
             images.push(`${basePath}${i}.webp`);
         }
@@ -313,7 +339,7 @@ function setupInfoImage() {
 
     const infoSrc = currentType === 'project'
         ? `data/projects/${currentSlug}/info.webp`
-        : `data/familyArchive/${currentProject.archiveSlug}/${currentProject.slug}/info.webp`;
+        : `data/familyArchive/${currentProject.archiveBasePath}/${currentProject.slug}/info.webp`;
 
     // Keep hidden until image is confirmed to exist.
     infoImg.classList.add('hidden');
