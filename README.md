@@ -100,9 +100,8 @@ Important:
 
 ## 9) SEO notes
 
-- SEO tags were added with temporary domain `https://example.com`.
-- Replace `example.com` with the real domain when available.
-- `robots.txt` and `sitemap.xml` also use `https://example.com` for now.
+- SEO tags are configured with the production domain `https://conorashlee.com`.
+- `robots.txt` and `sitemap.xml` also use `https://conorashlee.com`.
 
 ## 10) Pre-publish checklist
 
@@ -115,7 +114,7 @@ Important:
    - Extra pages (if used)
 2. Open browser console and confirm no JS errors.
 3. Confirm image counts match `data/data.json`.
-4. After final domain is ready, replace `example.com` in:
+4. Confirm production domain references are correct (`https://conorashlee.com`) in:
    - HTML SEO tags
    - `robots.txt`
    - `sitemap.xml`

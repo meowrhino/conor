@@ -1,76 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- TODO: Replace example.com with the final production domain -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://example.com/index.html</loc>
+    <loc>https://conorashlee.com/index.html</loc>
   </url>
   <url>
-    <loc>https://example.com/about.html</loc>
+    <loc>https://conorashlee.com/about.html</loc>
   </url>
   <url>
-    <loc>https://example.com/commission.html</loc>
+    <loc>https://conorashlee.com/commission.html</loc>
   </url>
   <url>
-    <loc>https://example.com/familyArchive.html</loc>
+    <loc>https://conorashlee.com/familyArchive.html</loc>
   </url>
   <url>
-    <loc>https://example.com/project.html?type=project&amp;slug=allEars</loc>
+    <loc>https://conorashlee.com/project.html?type=project&amp;slug=allEars</loc>
   </url>
   <url>
-    <loc>https://example.com/project.html?type=project&amp;slug=belladona</loc>
+    <loc>https://conorashlee.com/project.html?type=project&amp;slug=belladona</loc>
   </url>
   <url>
-    <loc>https://example.com/project.html?type=project&amp;slug=buttercup</loc>
+    <loc>https://conorashlee.com/project.html?type=project&amp;slug=buttercup</loc>
   </url>
   <url>
-    <loc>https://example.com/extra.html?slug=belladona</loc>
+    <loc>https://conorashlee.com/extra.html?slug=belladona</loc>
   </url>
   <url>
-    <loc>https://example.com/project.html?type=album&amp;slug=1987_rhodes</loc>
+    <loc>https://conorashlee.com/project.html?type=album&amp;slug=1987_rhodes</loc>
   </url>
   <url>
-    <loc>https://example.com/project.html?type=album&amp;slug=1989</loc>
+    <loc>https://conorashlee.com/project.html?type=album&amp;slug=1989</loc>
   </url>
   <url>
-    <loc>https://example.com/project.html?type=album&amp;slug=1990</loc>
+    <loc>https://conorashlee.com/project.html?type=album&amp;slug=1990</loc>
   </url>
   <url>
-    <loc>https://example.com/project.html?type=album&amp;slug=1993_4</loc>
+    <loc>https://conorashlee.com/project.html?type=album&amp;slug=1993_4</loc>
   </url>
   <url>
-    <loc>https://example.com/project.html?type=album&amp;slug=1993_wed</loc>
+    <loc>https://conorashlee.com/project.html?type=album&amp;slug=1993_wed</loc>
   </url>
   <url>
-    <loc>https://example.com/project.html?type=album&amp;slug=1994</loc>
+    <loc>https://conorashlee.com/project.html?type=album&amp;slug=1994</loc>
   </url>
   <url>
-    <loc>https://example.com/project.html?type=album&amp;slug=1994-95</loc>
+    <loc>https://conorashlee.com/project.html?type=album&amp;slug=1994-95</loc>
   </url>
   <url>
-    <loc>https://example.com/project.html?type=album&amp;slug=1999_connor</loc>
+    <loc>https://conorashlee.com/project.html?type=album&amp;slug=1999_connor</loc>
   </url>
   <url>
-    <loc>https://example.com/project.html?type=album&amp;slug=2001</loc>
+    <loc>https://conorashlee.com/project.html?type=album&amp;slug=2001</loc>
   </url>
   <url>
-    <loc>https://example.com/project.html?type=album&amp;slug=2002-2003</loc>
+    <loc>https://conorashlee.com/project.html?type=album&amp;slug=2002-2003</loc>
   </url>
   <url>
-    <loc>https://example.com/project.html?type=album&amp;slug=2003-2004_turkey</loc>
+    <loc>https://conorashlee.com/project.html?type=album&amp;slug=2003-2004_turkey</loc>
   </url>
   <url>
-    <loc>https://example.com/project.html?type=album&amp;slug=aged_8</loc>
+    <loc>https://conorashlee.com/project.html?type=album&amp;slug=aged_8</loc>
   </url>
   <url>
-    <loc>https://example.com/project.html?type=album&amp;slug=conor_3</loc>
+    <loc>https://conorashlee.com/project.html?type=album&amp;slug=conor_3</loc>
   </url>
   <url>
-    <loc>https://example.com/project.html?type=album&amp;slug=house</loc>
+    <loc>https://conorashlee.com/project.html?type=album&amp;slug=house</loc>
   </url>
   <url>
-    <loc>https://example.com/project.html?type=album&amp;slug=lewis</loc>
+    <loc>https://conorashlee.com/project.html?type=album&amp;slug=lewis</loc>
   </url>
   <url>
-    <loc>https://example.com/project.html?type=album&amp;slug=misc</loc>
+    <loc>https://conorashlee.com/project.html?type=album&amp;slug=misc</loc>
   </url>
 </urlset>
