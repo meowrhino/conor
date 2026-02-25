@@ -667,10 +667,22 @@ body.is-home .top-left-actions .btn-home {
     z-index: 99;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    cursor: grab;
+    user-select: none;
+    touch-action: pan-y;
 }
 
 .bio-images-container::-webkit-scrollbar {
     display: none;
+}
+
+.bio-images-container.is-grabbing,
+.bio-images-container.is-dragging {
+    cursor: grabbing;
+}
+
+.bio-images-container.is-dragging .bio-me-image {
+    pointer-events: none;
 }
 
 .bio-images {

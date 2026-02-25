@@ -75,6 +75,7 @@ async function init() {
     setupNoiseCanvas();
     loadCvImages(mainBioImage, cvImages);
     loadBioImages(bioImageCount, bioGalleryBasePath);
+    setupBioDragScroll();
     setupEventListeners();
 }
 
@@ -236,6 +237,90 @@ function updateBioLightboxButtons() {
 
     btns[0].classList.toggle('lightbox-btn--hidden', currentIndex === 0);
     btns[1].classList.toggle('lightbox-btn--hidden', currentIndex === lastIndex);
+}
+
+// ---------------------------------------------------------------------------
+// Bio strip drag scroll (mouse/touch)
+// ---------------------------------------------------------------------------
+
+function setupBioDragScroll() {
+    const container = document.querySelector('.bio-images-container');
+    if (!container || container.dataset.dragReady === 'true') return;
+    container.dataset.dragReady = 'true';
+
+    let pointerDown = false;
+    let pointerId = null;
+    let startX = 0;
+    let startScrollLeft = 0;
+    let dragged = false;
+    let suppressClick = false;
+    const dragThreshold = 6;
+
+    function endDrag() {
+        if (!pointerDown) return;
+        pointerDown = false;
+        if (pointerId !== null && container.releasePointerCapture) {
+            try {
+                container.releasePointerCapture(pointerId);
+            } catch {
+                // Ignore release errors when pointer was not captured.
+            }
+        }
+        pointerId = null;
+        suppressClick = dragged;
+        dragged = false;
+        container.classList.remove('is-dragging', 'is-grabbing');
+    }
+
+    container.addEventListener('pointerdown', (e) => {
+        if (e.pointerType !== 'touch' && e.button !== 0) return;
+        pointerDown = true;
+        pointerId = e.pointerId;
+        startX = e.clientX;
+        startScrollLeft = container.scrollLeft;
+        dragged = false;
+        container.classList.add('is-grabbing');
+
+        if (container.setPointerCapture) {
+            try {
+                container.setPointerCapture(pointerId);
+            } catch {
+                // Ignore capture errors in unsupported cases.
+            }
+        }
+    });
+
+    container.addEventListener('pointermove', (e) => {
+        if (!pointerDown) return;
+
+        const deltaX = e.clientX - startX;
+        if (!dragged && Math.abs(deltaX) > dragThreshold) {
+            dragged = true;
+            container.classList.add('is-dragging');
+        }
+
+        if (!dragged) return;
+        container.scrollLeft = startScrollLeft - deltaX;
+        e.preventDefault();
+    });
+
+    container.addEventListener('pointerup', endDrag);
+    container.addEventListener('pointercancel', endDrag);
+
+    container.addEventListener('pointerleave', (e) => {
+        // Mouse can leave the strip while released outside.
+        if (pointerDown && e.pointerType === 'mouse' && (e.buttons & 1) === 0) {
+            endDrag();
+        }
+    });
+
+    // Prevent opening lightbox when drag ended as a click.
+    container.addEventListener('click', (e) => {
+        if (!suppressClick) return;
+        e.preventDefault();
+        e.stopPropagation();
+        suppressClick = false;
+    }, true);
 }
 
 function setupEventListeners() {
