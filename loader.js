@@ -51,11 +51,25 @@
         });
     }
 
+    // Keep canonical and og:url aligned with the real runtime URL.
+    function syncSeoUrl() {
+        const currentUrl = window.location.origin + window.location.pathname + window.location.search;
+        const canonical = document.querySelector('link[rel="canonical"]');
+        const ogUrl = document.querySelector('meta[property="og:url"]');
+
+        if (canonical) canonical.href = currentUrl;
+        if (ogUrl) ogUrl.content = currentUrl;
+    }
+
     // Run on DOMContentLoaded
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', setupFadeOnLoad);
+        document.addEventListener('DOMContentLoaded', () => {
+            setupFadeOnLoad();
+            syncSeoUrl();
+        });
     } else {
         setupFadeOnLoad();
+        syncSeoUrl();
     }
 
     // Expose for dynamic content

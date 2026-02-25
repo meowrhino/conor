@@ -130,7 +130,7 @@ async function loadProject() {
         return;
     }
 
-    document.title = currentProject.title;
+    document.title = 'Conor Ashlee-Purle';
 
     await prepareImages();
 

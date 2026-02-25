@@ -5,6 +5,14 @@
     "instagram": "conor_ashlee",
     "imageCount": 8
   },
+  "about": {
+    "mainBioImage": "data/bio/bio.webp",
+    "cvImages": [
+      "data/bio/cv/1.webp"
+    ],
+    "bioGalleryBasePath": "data/bio/me",
+    "bioImageCount": 8
+  },
   "projects": [
     {
       "slug": "allEars",

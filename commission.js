@@ -61,7 +61,11 @@ async function loadCommissionImages() {
             commissionImages.push(`${basePath}${i}.webp`);
         }
 
-        images.push({ slug: commission.slug, images: commissionImages });
+        images.push({
+            slug: commission.slug,
+            title: commission.title || commission.slug,
+            images: commissionImages
+        });
     }
 
     if (images.length === 0) {
@@ -100,7 +104,7 @@ function renderHorizontalScroll() {
 
             commission.images.forEach((src, imgIndex) => {
                 const img = document.createElement('img');
-                img.alt = `${commission.slug} ${imgIndex + 1}`;
+                img.alt = `${commission.title} ${imgIndex + 1}`;
                 img.className = 'commission-image fade-on-load';
                 img.addEventListener('click', () => openLightbox(src));
                 img.src = src;

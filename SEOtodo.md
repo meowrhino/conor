@@ -5,22 +5,22 @@ Objetivo: mejorar descubrimiento organico para busquedas tipo `conor ashlee-purl
 ## Prioridad 0 - Base tecnica
 
 - [ ] Definir URL canonica del sitio (ej. `https://tudominio.com`).
-- [ ] Anadir `meta description` unica en cada HTML:
+- [x] Anadir `meta description` unica en cada HTML:
   - `index.html`
   - `about.html`
   - `project.html`
   - `commission.html`
   - `familyArchive.html`
   - `extra.html`
-- [ ] Anadir `link rel="canonical"` en cada pagina.
-- [ ] Anadir etiquetas Open Graph y Twitter Card basicas:
+- [x] Anadir `link rel="canonical"` en cada pagina.
+- [x] Anadir etiquetas Open Graph y Twitter Card basicas:
   - `og:title`
   - `og:description`
   - `og:image`
   - `og:url`
   - `twitter:card`
-- [ ] Crear `robots.txt` en raiz.
-- [ ] Crear `sitemap.xml` en raiz con todas las URLs publicas.
+- [x] Crear `robots.txt` en raiz.
+- [x] Crear `sitemap.xml` en raiz con todas las URLs publicas.
 - [ ] Alta en Google Search Console y envio de sitemap.
 
 ## Prioridad 1 - Contenido indexable
@@ -58,3 +58,4 @@ Objetivo: mejorar descubrimiento organico para busquedas tipo `conor ashlee-purl
 
 - Priorizar primero `meta + canonical + sitemap + robots + texto real en About`.
 - El resto (schema, OG avanzado, CWV fino) se puede hacer en una segunda pasada.
+- Temporalmente se usa `https://example.com` como dominio placeholder en SEO tags/sitemap/robots hasta definir dominio final.

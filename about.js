@@ -62,25 +62,32 @@ async function init() {
         }
     });
 
+    const aboutConfig = appData.about || {};
+    const mainBioImage = aboutConfig.mainBioImage || 'data/bio/bio.webp';
+    const cvImages = Array.isArray(aboutConfig.cvImages) && aboutConfig.cvImages.length
+        ? aboutConfig.cvImages
+        : ['data/bio/cv/1.webp'];
+    const bioGalleryBasePath = aboutConfig.bioGalleryBasePath || 'data/bio/me';
+    const bioImageCount = Number.isInteger(aboutConfig.bioImageCount)
+        ? aboutConfig.bioImageCount
+        : (appData.contact.imageCount || 0);
+
     setupNoiseCanvas();
-    loadCvImages();
-    loadBioImages(appData.contact.imageCount || 0);
+    loadCvImages(mainBioImage, cvImages);
+    loadBioImages(bioImageCount, bioGalleryBasePath);
     setupEventListeners();
 }
 
 /**
  * Load profile set (main bio + CV images) and wire them to one shared lightbox set.
  */
-function loadCvImages() {
+function loadCvImages(mainBioPath, cvImagePaths) {
     const cvImagesContainer = document.getElementById('cv-images');
-    const mainBioPath = 'data/bio/bio.webp';
-    const cvImagePaths = [
-        'data/bio/cv/1.webp'
-    ];
     profileImages = [mainBioPath, ...cvImagePaths];
 
     const mainBioImage = document.querySelector('.bio-image');
     if (mainBioImage) {
+        mainBioImage.src = mainBioPath;
         mainBioImage.style.cursor = 'pointer';
         mainBioImage.addEventListener('click', () => openBioLightbox(mainBioPath, profileImages));
     }
@@ -105,14 +112,16 @@ let currentIndex = 0;
 
 /**
  * Load bio images from data/bio/me/ and make them clickable for lightbox.
- * Count is read from data.json contact.imageCount.
+ * Count/path are read from data.json about config (with legacy fallback).
  */
-function loadBioImages(count) {
+function loadBioImages(count, basePath) {
     const bioImagesContainer = document.getElementById('bio-images');
     bioImages = [];
+    const normalizedBasePath = String(basePath || '').replace(/\/+$/, '');
+    if (!normalizedBasePath) return;
 
     for (let i = 1; i <= count; i++) {
-        const path = `data/bio/me/${i}.webp`;
+        const path = `${normalizedBasePath}/${i}.webp`;
         bioImages.push(path);
         const img = document.createElement('img');
         img.src = path;
