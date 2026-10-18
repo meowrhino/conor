@@ -84,15 +84,18 @@ function populateAlbums() {
 // ---------------------------------------------------------------------------
 
 function goToAlbum(albumSlug) {
+    try { sessionStorage.setItem('transicion', '{}'); } catch {} // la siguiente página llega tapada (transición de la casa)
     window.location.href = CASA.pageUrl('album', albumSlug);
 }
 
 function setupEventListeners() {
     document.getElementById('about-btn').addEventListener('click', () => {
+        try { sessionStorage.setItem('transicion', '{}'); } catch {} // la siguiente página llega tapada (transición de la casa)
         window.location.href = CASA.pageUrl('about');
     });
 
     document.querySelector('.btn-home').addEventListener('click', () => {
+        try { sessionStorage.setItem('transicion', '{}'); } catch {} // la siguiente página llega tapada (transición de la casa)
         window.location.href = 'index.html';
     });
 }

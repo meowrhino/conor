@@ -137,7 +137,7 @@ function page(file, { path, title, image, depth, type, slug, robots }) {
 
 rmSync(OUT, { recursive: true, force: true });
 mkdirSync(OUT, { recursive: true });
-for (const f of ['style.css', 'js', 'data', 'projects', 'gate.js', 'noise.js', 'loader.js', 'home.js', 'about.js', 'commission.js', 'familyArchive.js', 'extra.js', 'project.js'])
+for (const f of ['style.css', 'css', 'js', 'data', 'projects', 'gate.js', 'noise.js', 'loader.js', 'home.js', 'about.js', 'commission.js', 'familyArchive.js', 'extra.js', 'project.js'])
   cpSync(at(f), join(OUT, f), { recursive: true, filter: (x) => !x.endsWith('.DS_Store') });
 // the old addresses keep working (project.html?type=…), already built
 for (const f of ['project.html', 'about.html', 'commission.html', 'familyArchive.html', 'extra.html'])
