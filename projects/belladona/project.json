@@ -1,0 +1,7 @@
+{
+  "$schema": "../../schema/project.json",
+  "title": "belladona",
+  "kind": "project",
+  "images": 173,
+  "extras": 18
+}

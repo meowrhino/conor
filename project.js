@@ -30,20 +30,17 @@ let currentImageIndex = 0;
 
 async function init() {
     try {
-        const response = await fetch('data/data.json');
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status} ${response.statusText}`);
-        }
-        appData = await response.json();
+        appData = await CASA.loadData();   // data/site.json + projects/ (js/carga.js)
     } catch (error) {
+        if (document.getElementById('errores-vista-previa')) return;   // la vista previa enseña el error
         console.error('[project.js] Failed to load data/data.json. Redirecting to home.', error);
         window.location.href = 'index.html';
         return;
     }
 
     const params = new URLSearchParams(window.location.search);
-    currentType = params.get('type');
-    currentSlug = params.get('slug');
+    currentType = params.get('type') || window.__TYPE__;
+    currentSlug = params.get('slug') || window.__SLUG__;
 
     if (!currentType || !currentSlug) {
         console.error('[project.js] Missing URL params: type or slug');
@@ -184,12 +181,13 @@ async function prepareImages() {
         }
     } else {
         const basePath = currentType === 'project'
-            ? `data/projects/${currentSlug}/img/`
-            : `data/commission/${currentSlug}/`;
+            ? `projects/${currentSlug}/img/`
+            : `projects/${currentSlug}/`;
 
         // Projects may have images.json with custom filenames
         if (currentType === 'project') {
-            const manifest = await loadImageManifest(`data/projects/${currentSlug}/images.json`);
+            // los nombres, si el proyecto los lista en su project.json ("images": [...])
+            const manifest = Array.isArray(currentProject.images) ? currentProject.images : null;
             if (manifest && manifest.length) {
                 manifest.forEach(file => images.push(basePath + file));
                 return;
@@ -338,7 +336,7 @@ function setupInfoImage() {
     if (currentType !== 'project' && currentType !== 'album') return;
 
     const infoSrc = currentType === 'project'
-        ? `data/projects/${currentSlug}/info.webp`
+        ? `projects/${currentSlug}/info.webp`
         : `data/familyArchive/${currentProject.archiveBasePath}/${currentProject.slug}/info.webp`;
 
     // Keep hidden until image is confirmed to exist.
@@ -408,7 +406,7 @@ function setupEventListeners() {
         navBtn.src = 'data/assets/buttons/back.webp';
         navBtn.alt = 'Back';
         navBtn.addEventListener('click', () => {
-            window.location.href = 'familyArchive.html';
+            window.location.href = CASA.pageUrl('archive');
         });
     } else {
         navBtn.addEventListener('click', () => {
@@ -420,7 +418,7 @@ function setupEventListeners() {
     const extraBtn = document.querySelector('.btn-extra');
     if (extraBtn && hasExtra()) {
         extraBtn.addEventListener('click', () => {
-            window.location.href = `extra.html?slug=${currentSlug}`;
+            window.location.href = CASA.pageUrl('extra', currentSlug);
         });
     }
 

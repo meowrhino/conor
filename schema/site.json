@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "data/site.json: the site in general",
+  "description": "data/site.json: the name, the domain, the projects and commissions (in order) and the family archive. VS Code reads this file (through the \"$schema\" line at the top of the JSON) to autocomplete, explain each field and underline what's wrong; the build and the preview use it to check.",
+  "type": "object",
+  "required": [
+    "title",
+    "lists",
+    "archive"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "_": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^https://[^/]+$",
+      "description": "The domain, no trailing slash. Without a domain, null."
+    },
+    "lists": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "projects": {
+          "type": "object",
+          "required": [
+            "projects"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "projects": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_-]+$",
+                "description": "The folder name in projects/: letters, numbers, - and _. It's the address: /<name>/"
+              },
+              "description": "The projects on the main menu, in order."
+            }
+          }
+        },
+        "commissions": {
+          "type": "object",
+          "required": [
+            "projects"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "projects": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_-]+$",
+                "description": "The folder name in projects/: letters, numbers, - and _. It's the address: /<name>/"
+              },
+              "description": "The commissions, in order."
+            }
+          }
+        }
+      }
+    },
+    "archive": {
+      "type": "object",
+      "required": [
+        "basePath",
+        "albums"
+      ],
+      "additionalProperties": false,
+      "description": "The family archive: its folder in data/familyArchive/ and its albums.",
+      "properties": {
+        "basePath": {
+          "type": "string"
+        },
+        "albums": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "slug",
+              "title",
+              "imageCount"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "slug": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_-]+$",
+                "description": "The folder name in projects/: letters, numbers, - and _. It's the address: /<name>/"
+              },
+              "title": {
+                "type": "string"
+              },
+              "imageCount": {
+                "type": "number",
+                "minimum": 1,
+                "description": "How many photos: 1.webp … N.webp, no quotes."
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

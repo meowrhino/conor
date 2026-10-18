@@ -10,12 +10,9 @@
 async function init() {
     let appData;
     try {
-        const response = await fetch('data/data.json');
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status} ${response.statusText}`);
-        }
-        appData = await response.json();
+        appData = await CASA.loadData();   // data/site.json + projects/ (js/carga.js)
     } catch (error) {
+        if (document.getElementById('errores-vista-previa')) return;   // la vista previa enseña el error
         console.error('[about.js] Failed to load data/data.json. Using fallback contact values.', error);
         appData = { contact: {} };
     }

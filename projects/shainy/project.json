@@ -1,0 +1,6 @@
+{
+  "$schema": "../../schema/project.json",
+  "title": "Shainy",
+  "kind": "commission",
+  "images": 4
+}

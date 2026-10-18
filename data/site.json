@@ -1,57 +1,24 @@
 {
-  "contact": {
-    "email": "cashlee.purle@gmail.com",
-    "phone": "+44 (0) 747 5121424",
-    "instagram": "conor_ashlee",
-    "imageCount": 8
-  },
-  "about": {
-    "mainBioImage": "data/bio/bio.webp",
-    "cvImages": [
-      "data/bio/cv/1.webp"
-    ],
-    "bioGalleryBasePath": "data/bio/me",
-    "bioImageCount": 8
-  },
-  "projects": [
-    {
-      "slug": "allEars",
-      "title": "i am all ears",
-      "imageCount": 27,
-      "password": null
+  "$schema": "../schema/site.json",
+  "title": "Conor Ashlee-Purle",
+  "url": "https://conorashlee.com",
+  "lists": {
+    "projects": {
+      "projects": [
+        "allEars",
+        "belladona",
+        "buttercup"
+      ]
     },
-    {
-      "slug": "belladona",
-      "title": "belladona",
-      "imageCount": 173,
-      "extraCount": 18,
-      "password": null
-    },
-    {
-      "slug": "buttercup",
-      "title": "pucker up butter cup",
-      "imageCount": 228,
-      "password": "bloom"
+    "commissions": {
+      "projects": [
+        "kate",
+        "r1",
+        "shainy"
+      ]
     }
-  ],
-  "commissions": [
-    {
-      "slug": "kate",
-      "title": "Kate",
-      "imageCount": 4
-    },
-    {
-      "slug": "r1",
-      "title": "R1",
-      "imageCount": 3
-    },
-    {
-      "slug": "shainy",
-      "title": "Shainy",
-      "imageCount": 4
-    }
-  ],
-  "familyArchive": {
+  },
+  "archive": {
     "basePath": "ashlee",
     "albums": [
       {

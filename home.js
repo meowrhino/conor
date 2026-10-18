@@ -19,12 +19,9 @@ let appData = null;
 
 async function init() {
     try {
-        const response = await fetch('data/data.json');
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status} ${response.statusText}`);
-        }
-        appData = await response.json();
+        appData = await CASA.loadData();   // data/site.json + projects/ (js/carga.js)
     } catch (error) {
+        if (document.getElementById('errores-vista-previa')) return;   // la vista previa enseña el error
         console.error('[home.js] Failed to load data/data.json. Main menu cannot be built.', error);
         return;
     }
@@ -43,7 +40,7 @@ async function init() {
  * Try to load title.webp from the project folder; fall back to assets/titles/.
  */
 function setTitleImage(img, slug, fallbackSrc) {
-    const preferredSrc = `data/projects/${slug}/title.webp`;
+    const preferredSrc = `projects/${slug}/title.webp`;
     img.src = preferredSrc;
     img.onerror = () => {
         img.onerror = null;
@@ -122,7 +119,7 @@ function showPasswordScreen(project) {
             setTimeout(() => goToProject('project', project.slug), 1000);
         } else {
             // Show project-specific hint if available, otherwise show generic wrong
-            const hintPath = `data/projects/${project.slug}/hint.webp`;
+            const hintPath = `projects/${project.slug}/hint.webp`;
             feedback.src = hintPath;
             
             // Fallback to generic wrong if hint doesn't exist
@@ -147,22 +144,22 @@ function showPasswordScreen(project) {
 // ---------------------------------------------------------------------------
 
 function goToProject(type, slug) {
-    window.location.href = `project.html?type=${type}&slug=${slug}`;
+    window.location.href = CASA.pageUrl(type, slug);
 }
 
 function setupEventListeners() {
     document.getElementById('about-btn').addEventListener('click', () => {
-        window.location.href = 'about.html';
+        window.location.href = CASA.pageUrl('about');
     });
 
     // Navigate to commission page
     document.getElementById('commissions-link').addEventListener('click', () => {
-        window.location.href = 'commission.html';
+        window.location.href = CASA.pageUrl('commissions');
     });
 
     // Navigate to family archive page
     document.getElementById('family-archive-link').addEventListener('click', () => {
-        window.location.href = 'familyArchive.html';
+        window.location.href = CASA.pageUrl('archive');
     });
 
     // Home buttons — return to main menu

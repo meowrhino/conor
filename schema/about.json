@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "data/about.json: about",
+  "description": "data/about.json: contact details and the bio images. VS Code reads this file (through the \"$schema\" line at the top of the JSON) to autocomplete, explain each field and underline what's wrong; the build and the preview use it to check.",
+  "type": "object",
+  "required": [
+    "contact",
+    "bio"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "_": {
+      "type": "string"
+    },
+    "contact": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "instagram": {
+          "type": "string",
+          "description": "The username, no @."
+        },
+        "imageCount": {
+          "type": "number"
+        }
+      }
+    },
+    "bio": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "mainBioImage": {
+          "type": "string"
+        },
+        "cvImages": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "bioGalleryBasePath": {
+          "type": "string"
+        },
+        "bioImageCount": {
+          "type": "number",
+          "description": "How many bio photos, no quotes."
+        }
+      }
+    }
+  }
+}

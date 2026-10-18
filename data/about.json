@@ -1,0 +1,17 @@
+{
+  "$schema": "../schema/about.json",
+  "contact": {
+    "email": "cashlee.purle@gmail.com",
+    "phone": "+44 (0) 747 5121424",
+    "instagram": "conor_ashlee",
+    "imageCount": 8
+  },
+  "bio": {
+    "mainBioImage": "data/bio/bio.webp",
+    "cvImages": [
+      "data/bio/cv/1.webp"
+    ],
+    "bioGalleryBasePath": "data/bio/me",
+    "bioImageCount": 8
+  }
+}

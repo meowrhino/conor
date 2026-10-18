@@ -31,12 +31,9 @@ async function init() {
 async function loadCommissionImages() {
     let appData;
     try {
-        const response = await fetch('data/data.json');
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status} ${response.statusText}`);
-        }
-        appData = await response.json();
+        appData = await CASA.loadData();   // data/site.json + projects/ (js/carga.js)
     } catch (error) {
+        if (document.getElementById('errores-vista-previa')) return;   // la vista previa enseña el error
         console.error('[commission.js] Failed to load data/data.json. Redirecting to home.', error);
         window.location.href = 'index.html';
         return;
@@ -54,7 +51,7 @@ async function loadCommissionImages() {
             continue;
         }
 
-        const basePath = `data/commission/${commission.slug}/`;
+        const basePath = `projects/${commission.slug}/`;
         const commissionImages = [];
 
         for (let i = 1; i <= commission.imageCount; i++) {

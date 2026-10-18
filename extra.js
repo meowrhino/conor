@@ -20,7 +20,7 @@ let images = [];
 
 async function init() {
     const params = new URLSearchParams(window.location.search);
-    projectSlug = params.get('slug');
+    projectSlug = params.get('slug') || window.__SLUG__;
 
     if (!projectSlug) {
         console.error('[extra.js] No slug provided in URL params');
@@ -44,12 +44,9 @@ async function loadExtraImages() {
     // Fetch project data
     let appData;
     try {
-        const response = await fetch('data/data.json');
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status} ${response.statusText}`);
-        }
-        appData = await response.json();
+        appData = await CASA.loadData();   // data/site.json + projects/ (js/carga.js)
     } catch (error) {
+        if (document.getElementById('errores-vista-previa')) return;   // la vista previa enseña el error
         console.error('[extra.js] Failed to load data/data.json. Redirecting to home.', error);
         window.location.href = 'index.html';
         return;
@@ -65,11 +62,11 @@ async function loadExtraImages() {
 
     if (!project.extraCount || project.extraCount <= 0) {
         console.error(`[extra.js] Project "${projectSlug}" has no extraCount defined in data.json`);
-        window.location.href = `project.html?type=project&slug=${projectSlug}`;
+        window.location.href = CASA.pageUrl('project', projectSlug);
         return;
     }
 
-    const basePath = `data/projects/${projectSlug}/extra/`;
+    const basePath = `projects/${projectSlug}/extra/`;
     for (let i = 1; i <= project.extraCount; i++) {
         images.push(`${basePath}${i}.webp`);
     }
@@ -109,7 +106,7 @@ function renderHorizontalScroll() {
 
 function setupEventListeners() {
     document.querySelector('.btn-back-extra').addEventListener('click', () => {
-        window.location.href = `project.html?type=project&slug=${projectSlug}`;
+        window.location.href = CASA.pageUrl('project', projectSlug);
     });
 }
 

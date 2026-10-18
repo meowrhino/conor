@@ -13,12 +13,9 @@ let appData = null;
 
 async function init() {
     try {
-        const response = await fetch('data/data.json');
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status} ${response.statusText}`);
-        }
-        appData = await response.json();
+        appData = await CASA.loadData();   // data/site.json + projects/ (js/carga.js)
     } catch (error) {
+        if (document.getElementById('errores-vista-previa')) return;   // la vista previa enseña el error
         console.error('[familyArchive.js] Failed to load data/data.json. Redirecting to home.', error);
         window.location.href = 'index.html';
         return;
@@ -87,12 +84,12 @@ function populateAlbums() {
 // ---------------------------------------------------------------------------
 
 function goToAlbum(albumSlug) {
-    window.location.href = `project.html?type=album&slug=${encodeURIComponent(albumSlug)}`;
+    window.location.href = CASA.pageUrl('album', albumSlug);
 }
 
 function setupEventListeners() {
     document.getElementById('about-btn').addEventListener('click', () => {
-        window.location.href = 'about.html';
+        window.location.href = CASA.pageUrl('about');
     });
 
     document.querySelector('.btn-home').addEventListener('click', () => {

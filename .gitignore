@@ -1,2 +1,8 @@
 .DS_Store
 .claude/
+
+node_modules/
+# The generated site: written by node build/build.mjs, published by the Action
+dist/
+# Share images (sharp): made by the build
+.cache/

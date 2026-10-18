@@ -1,0 +1,7 @@
+{
+  "$schema": "../../schema/project.json",
+  "title": "pucker up butter cup",
+  "kind": "project",
+  "images": 228,
+  "password": "bloom"
+}
