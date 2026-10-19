@@ -113,6 +113,7 @@ const meta = (html, prop, value, file) => swap(html, new RegExp(`(<meta property
 // what Google and screen readers read: the title and the links (the site's text is in its images)
 const sr = 'position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap';
 const nav = () => [
+  `<a href="${BASE}/">home</a>`,
   ...data.projects.map((p) => `<a href="${BASE}/${encodeURIComponent(p.slug)}/">${esc(p.title)}</a>`),
   `<a href="${BASE}/commissions/">commissions</a>`, `<a href="${BASE}/archive/">family archive</a>`, `<a href="${BASE}/about/">about</a>`,
 ].join(' ');
